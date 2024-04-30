@@ -1,0 +1,11 @@
+FROM netflix/eureka:1.10.12
+
+# Set environment variables
+ENV EUREKA_INSTANCE_HOST=eureka
+ENV EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://${EUREKA_INSTANCE_HOST}:8761/eureka/
+
+# Expose the Eureka port
+EXPOSE 8761
+
+# Set the default command
+CMD ["java", "-jar", "eureka-server.jar"]
