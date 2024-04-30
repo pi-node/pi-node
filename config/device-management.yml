@@ -1,0 +1,33 @@
+# Device management service configuration
+
+# Database configuration
+database:
+  host: localhost
+  port: 5432
+  name: device_management
+  user: device_management
+  password: password
+
+# Message broker configuration
+messageBroker:
+  type: rabbitmq
+  host: message_broker
+  port: 5672
+  username: rabbitmq
+  password: password
+
+# Service registry configuration
+serviceRegistry:
+  type: eureka
+  host: service_registry
+  port: 8761
+
+# Logging configuration
+logging:
+  level: info
+  file: /var/log/device-management.log
+
+# Server configuration
+server:
+  host: localhost
+  port: 3001
