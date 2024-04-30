@@ -11,3 +11,15 @@ This guide will walk you through the process of installing and setting up the pi
 ## Installation Steps
 
 1. Clone the pi-node repository: `https://github.com/KOSASIH/pi-node.git`
+
+2. Navigate to the pi-node directory: `cd pi-node`
+
+3. Copy the `.env.example` file to `.env` and update the environment variables as needed: `cp .env.example .env`
+
+4. Build and start the services: `docker-compose up --build`
+5. 
+5. Access the web interface at [http://localhost:3000](http://localhost:3000).
+
+## Troubleshooting
+
+[Insert troubleshooting information here]
