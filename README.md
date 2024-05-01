@@ -1,3 +1,4 @@
+![Static Badge](https://img.shields.io/badge/Pi-Network-violet)
 [![CI](https://github.com/KOSASIH/pi-node/actions/workflows/blank.yml/badge.svg)](https://github.com/KOSASIH/pi-node/actions/workflows/blank.yml)
 [![DeepSource](https://app.deepsource.com/gh/KOSASIH/pi-node.svg/?label=active+issues&show_trend=true&token=Wm_z7gVv53FW1L6T7p4mrn0i)](https://app.deepsource.com/gh/KOSASIH/pi-node/)
 
