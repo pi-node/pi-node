@@ -25,7 +25,7 @@ The pi-node API uses JWT for authentication. To authenticate, include the `Autho
 
 - GET /api/devices?limit=20&offset=10 Authorization: Bearer <JWT_TOKEN>
 
-```
+````
 - `POST /devices`: Create a new device
 
 **Request Body**
@@ -39,7 +39,8 @@ The pi-node API uses JWT for authentication. To authenticate, include the `Autho
     "property2": "value2"
   }
 }
-```
+````
+
 Example Request
 
 ```
@@ -60,6 +61,7 @@ Content-Type: application/json
 - GET /devices/:id: Retrieve a device by ID
 
 Example Request
+
 ```
 GET /api/devices/123
 Authorization: Bearer <JWT_TOKEN>
@@ -67,7 +69,8 @@ Authorization: Bearer <JWT_TOKEN>
 
 - PUT /devices/:id: Update a device by ID
 
-Request Body 
+Request Body
+
 ```
 {
   "name": "Updated Device Name",
@@ -152,4 +155,3 @@ Example Error Response
   }
 }
 ```
-

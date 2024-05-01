@@ -8,7 +8,7 @@ To start the service, run the following command:
 
 docker-compose up device-management
 
-```
+````
 
 The service will be available at `http://localhost:3001`.
 
@@ -59,14 +59,14 @@ messageBroker:
 serviceRegistry:
   host: service_registry
   port: 8761
-```
+````
 
 # Logging
+
 The service logs messages to the console and to a file named device-management.log. The log level can be configured using the LOG_LEVEL environment variable or the logging.level configuration option.
 
 Server
 The service runs on a Node.js server and listens on port 3001. The server can be configured using the SERVER_HOST and SERVER_PORT environment variables or the server.host and server.port configuration options.
-
 
 Create an `api/index.js` file to define the API entry point:
 
@@ -86,4 +86,3 @@ module.exports = router;
 Create a routes/ directory for API routes and a controllers/ directory for API controllers.
 
 Create a models/ directory for data models and a services/ directory for external service calls.
-  

@@ -8,7 +8,7 @@ To start the service, run the following command:
 
 docker-compose up data-storage
 
-```
+````
 
 The service will be available at `jdbc:postgresql://localhost:5432/data_storage`.
 
@@ -35,7 +35,7 @@ database:
   name: data_storage
   user: data_storage
   password: password
-```
+````
 
 # Logging
 
