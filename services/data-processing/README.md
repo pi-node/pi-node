@@ -205,3 +205,108 @@ The service logs messages to the console and to a file named notifications.log. 
 # Server
 
 The service runs on a Node.js server and listens on port 3005. The server can be configured using the SERVER_HOST and SERVER_PORT environment variables or the server.host and server.port configuration options.
+
+# Web Interface Service
+
+This service provides the web interface for the pi-node IoT platform.
+
+## Usage
+
+To start the service, run the following command:
+
+docker-compose up web-interface
+
+```
+
+The service will be available at `http://localhost:3000`.
+
+## Configuration
+
+The service can be configured using environment variables or a configuration file.
+
+### Environment Variables
+
+- `API_HOST`: The hostname of the API server
+- `API_PORT`: The port of the API server
+
+### Configuration File
+The service can also be configured using a configuration file in YAML format. The file should be named `config.yml` and placed in the root directory of the service.
+
+```yaml
+api:
+  host: localhost
+  port: 3001
+```
+
+# Logging
+
+The service logs messages to the console and to a file named web-interface.log. The log level can be configured using the LOG_LEVEL environment variable or the logging.level configuration option.
+
+# Server
+
+The service runs on a Node.js server and listens on port 3000. The server can be configured using the SERVER_HOST and SERVER_PORT environment variables or the server.host and server.port configuration options.
+
+```
+**5. `services/mobile-app/`: Mobile app service**
+
+Create a `Dockerfile` to build a mobile app container:
+
+```Dockerfile
+FROM node:16
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the package.json and package-lock.json files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the application code
+COPY . .
+
+# Set the default command
+CMD ["npm", "start"]
+```
+
+# Mobile App Service
+
+This service provides the mobile app for the pi-node IoT platform.
+
+## Usage
+
+To start the service, run the following command:
+
+docker-compose up mobile-app
+
+```
+
+The service will be available at `http://localhost:3006`.
+
+## Configuration
+
+The service can be configured using environment variables or a configuration file.
+
+### Environment Variables
+
+- `API_HOST`: The hostname of the API server
+- `API_PORT`: The port of the API server
+
+### Configuration File
+
+The service can also be configured using a configuration file in YAML format. The file should be named `config.yml` and placed in the root directory of the service.
+
+```yaml
+api:
+  host: localhost
+  port: 3001
+```
+
+# Logging
+
+The service logs messages to the console and to a file named mobile-app.log. The log level can be configured using the LOG_LEVEL environment variable or the logging.level configuration option.
+
+# Server
+
+The service runs on a Node.js server and listens on port 3006. The server can be configured using the SERVER_HOST and SERVER_PORT environment variables or the server.host and server.port configuration options.
