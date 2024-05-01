@@ -48,4 +48,4 @@ Temperature: 23.5°C, Uptime: 1 day, 2 hours, 34 minutes, 56 seconds
 
 # License
 
-This project is licensed under the MIT License - see the LICENSE.md file for details.
+This project is licensed under the MIT License - see the [License](LICENSE.md) file for details.
