@@ -7,7 +7,8 @@ This service provides data processing functionality for the pi-node IoT platform
 To start the service, run the following command:
 
 docker-compose up data-processing
-```
+
+````
 
 The service will be available at `http://localhost:3003`.
 
@@ -38,7 +39,7 @@ messageBroker:
   port: 5672
   username: rabbitmq
   password: password
-```
+````
 
 # Logging
 
@@ -48,7 +49,7 @@ The service logs messages to the console and to a file named data-processing.log
 
 The service runs on a Node.js server and listens on port 3003. The server can be configured using the SERVER_HOST and SERVER_PORT environment variables or the server.host and server.port configuration options.
 
-```
+````
 
 **2. `services/user-management/`: User management service**
 
@@ -71,7 +72,7 @@ COPY . .
 
 # Set the default command
 CMD ["npm", "start"]
-```
+````
 
 # User Management Service
 
@@ -83,7 +84,7 @@ To start the service, run the following command:
 
 docker-compose up user-management
 
-```
+````
 
 The service will be available at `http://localhost:3004`.
 
@@ -119,7 +120,7 @@ database:
   name: user_management
   user: user_management
   password: password
-```
+````
 
 # Logging
 
@@ -129,7 +130,7 @@ The service logs messages to the console and to a file named user-management.log
 
 The service runs on a Node.js server and listens on port 3004. The server can be configured using the SERVER_HOST and SERVER_PORT environment variables or the server.host and server.port configuration options.
 
-```
+````
 
 **3. `services/notifications/`: Notifications service**
 
@@ -152,7 +153,7 @@ COPY . .
 
 # Set the default command
 CMD ["npm", "start"]
-```
+````
 
 # Notifications Service
 
@@ -164,7 +165,7 @@ To start the service, run the following command:
 
 docker-compose up notifications
 
-```
+````
 
 
 The service will be available at `http://localhost:3005`.
@@ -196,7 +197,7 @@ messageBroker:
   port: 5672
   username: rabbitmq
   password: password
-```
+````
 
 # Logging
 
@@ -216,7 +217,7 @@ To start the service, run the following command:
 
 docker-compose up web-interface
 
-```
+````
 
 The service will be available at `http://localhost:3000`.
 
@@ -236,7 +237,7 @@ The service can also be configured using a configuration file in YAML format. Th
 api:
   host: localhost
   port: 3001
-```
+````
 
 # Logging
 
@@ -246,7 +247,7 @@ The service logs messages to the console and to a file named web-interface.log. 
 
 The service runs on a Node.js server and listens on port 3000. The server can be configured using the SERVER_HOST and SERVER_PORT environment variables or the server.host and server.port configuration options.
 
-```
+````
 **5. `services/mobile-app/`: Mobile app service**
 
 Create a `Dockerfile` to build a mobile app container:
@@ -268,7 +269,7 @@ COPY . .
 
 # Set the default command
 CMD ["npm", "start"]
-```
+````
 
 # Mobile App Service
 
@@ -280,7 +281,7 @@ To start the service, run the following command:
 
 docker-compose up mobile-app
 
-```
+````
 
 The service will be available at `http://localhost:3006`.
 
@@ -301,7 +302,7 @@ The service can also be configured using a configuration file in YAML format. Th
 api:
   host: localhost
   port: 3001
-```
+````
 
 # Logging
 

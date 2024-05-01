@@ -19,6 +19,7 @@ To run this application, you will need the following:
 ```
 git clone https://github.com/KOSASIH/pi-node.git
 ```
+
 2. Install the required dependencies:
 
 ```
@@ -33,12 +34,15 @@ npm install
 ```
 npm start
 ```
+
 5. Use a web browser or a tool like curl to send an HTTP request to the Raspberry Pi and view the response:
 
 ```
 curl http://<RASPBERRY_PI_IP_ADDRESS>:3000
 ```
+
 The response will look something like this:
+
 ```
 Temperature: 23.5°C, Uptime: 1 day, 2 hours, 34 minutes, 56 seconds
 ```

@@ -17,8 +17,8 @@ This guide will walk you through the process of installing and setting up the pi
 3. Copy the `.env.example` file to `.env` and update the environment variables as needed: `cp .env.example .env`
 
 4. Build and start the services: `docker-compose up --build`
-5. 
-5. Access the web interface at [http://localhost:3000](http://localhost:3000).
+5.
+6. Access the web interface at [http://localhost:3000](http://localhost:3000).
 
 ## Troubleshooting
 
