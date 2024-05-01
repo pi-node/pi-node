@@ -1,5 +1,6 @@
 [![CI](https://github.com/KOSASIH/pi-node/actions/workflows/blank.yml/badge.svg)](https://github.com/KOSASIH/pi-node/actions/workflows/blank.yml)
 [![DeepSource](https://app.deepsource.com/gh/KOSASIH/pi-node.svg/?label=active+issues&show_trend=true&token=Wm_z7gVv53FW1L6T7p4mrn0i)](https://app.deepsource.com/gh/KOSASIH/pi-node/)
+
 # pi-node
 
 This repository contains the source code for a simple Node.js application that runs on a Raspberry Pi. The application listens for incoming HTTP requests and responds with a message indicating the current temperature and uptime of the Raspberry Pi.
