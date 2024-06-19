@@ -1,0 +1,22 @@
+---
+- name: Configure Pi Node
+  tasks:
+  - name: Create Pi Node user
+    user:
+      name: pi-node
+      state: present
+
+  - name: Create Pi Node directory
+    file:
+      path: /var/pi-node
+      state: directory
+      owner: pi-node
+      group: pi-node
+
+  - name: Copy Pi Node binary
+    copy:
+      content: "{{ pi_node_binary }}"
+      dest: /usr/local/bin/pi-node
+      mode: '0755'
+      owner: pi-node
+      group: pi-node
