@@ -1,0 +1,18 @@
+# playbooks/deploy_pi_supernode.yml
+---
+- name: Deploy Pi Supernode
+  hosts: pi-supernode
+  become: yes
+
+  roles:
+  - pi-supernode
+
+  vars:
+  - api_host: 192.168.1.100
+  - api_port: 8080
+  - db_host: 192.168.1.101
+  - db_port: 5432
+  - db_username: pi_supernode
+  - db_password: password
+  - node_name: pi-supernode
+  - node_description: Pi Supernode
