@@ -1,0 +1,4 @@
+FROM postgres:14
+
+# Setthe default command
+CMD ["postgres", "-c", "config_file=/etc/postgresql/14/main/postgresql.conf"]

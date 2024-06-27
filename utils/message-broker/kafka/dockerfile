@@ -1,0 +1,12 @@
+FROM confluentinc/cp-kafka:6.2.0
+
+# Set environment variables
+ENV KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+ENV KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+ENV KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+
+# Expose the Kafka port
+EXPOSE 9092
+
+# Set the default command
+CMD ["kafka-server-start", "/etc/kafka/server.properties"]

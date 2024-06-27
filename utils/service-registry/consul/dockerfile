@@ -1,0 +1,14 @@
+FROM consul:1.10.3
+
+# Set environment variables
+ENV CONSUL_BIND_INTERFACE=eth0
+ENV CONSUL_LOCAL_CONFIG={"skip_leave_on_interrupt": true}
+
+# Expose the Consul ports
+EXPOSE 8300:8300
+EXPOSE 8400:8400
+EXPOSE 8500:8500
+EXPOSE 8600:8600
+
+# Set the default command
+CMD ["consul", "agent", "-dev"]

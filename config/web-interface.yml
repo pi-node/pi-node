@@ -1,0 +1,16 @@
+# Web interface service configuration
+
+# Logging configuration
+logging:
+  level: info
+  file: /var/log/web-interface.log
+
+# Server configuration
+server:
+  host: localhost
+  port: 3000
+
+# UI configuration
+ui:
+  title: pi-node Web Interface
+  version: 1.0.0

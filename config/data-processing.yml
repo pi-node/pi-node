@@ -1,0 +1,17 @@
+# Data processing service configuration
+
+# Message broker configuration
+messageBroker:
+  type: kafka
+  host: message_broker
+  port: 9092
+
+# Logging configuration
+logging:
+  level: info
+  file: /var/log/data-processing.log
+
+# Server configuration
+server:
+  host: localhost
+  port: 3003

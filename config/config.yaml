@@ -1,0 +1,5 @@
+node_name: My Supernode
+node_type: validator
+network_id: kusama
+rpc_port: 9933
+ws_port: 9944

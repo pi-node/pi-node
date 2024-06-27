@@ -1,0 +1,10 @@
+FROM nginx:alpine
+
+# Copy the NGINX configuration file
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Expose the NGINX port
+EXPOSE 80
+
+# Set the default command
+CMD ["nginx", "-g", "daemon off;"]

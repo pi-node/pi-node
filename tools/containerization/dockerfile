@@ -1,0 +1,19 @@
+FROM node:16
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the package.json and package-lock.json files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the application code
+COPY . .
+
+# Install containerization tools
+RUN npm install -g docker docker-compose
+
+# Run the containerization tools
+CMD ["docker", "compose", "up", "--build"]

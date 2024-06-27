@@ -1,0 +1,38 @@
+---
+- name: Configure Pi Node
+  hosts: pi-nodes
+  become: yes
+
+  tasks:
+  - name: Install dependencies
+    apt:
+      name: python3,python3-pip
+      state: present
+
+  - name: Install Pi Node software
+    pip:
+      name: pi-node
+      state: present
+
+  - name: Configure Pi Node
+    template:
+      src: templates/config.json.j2
+      dest: /etc/pi-node/config.json
+      mode: '0644'
+
+  - name: Enable Pi Node service
+    service:
+      name: pi-node
+      state: enabled
+      enabled: yes
+
+  - name: Start Pi Node service
+    service:
+      name: pi-node
+      state: started
+
+  - name: Configure sleep mode
+    script: scripts/sleep-mode.sh
+
+  - name: Configure Wake-on-LAN
+    script: scripts/wake-on-lan.sh

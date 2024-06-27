@@ -1,0 +1,32 @@
+# roles/pi-supernode/tasks/install_pi_supernode.yml
+---
+- name: Install Pi Supernode
+  become: yes
+
+  tasks:
+  - name: Add Pi Supernode repository
+    apt_repository:
+      repo: 'https://pi-supernode.io/repo'
+      state: present
+
+  - name: Install Pi Supernode package
+    apt:
+      name: pi-supernode
+      state: present
+
+  - name: Install Pi Supernode dependencies
+    apt:
+      name: python3-pip,libffi-dev,libssl-dev
+      state: present
+
+  - name: Install Pi Supernode Python package
+    pip:
+      name: pi-supernode
+      state: present
+
+  - name: Configure Pi Supernode
+    template:
+      src: templates/config.j2
+      dest: /etc/pi-supernode/config.json
+      mode: '0644'
+    notify: restart pi-supernode
