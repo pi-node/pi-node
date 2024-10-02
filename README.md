@@ -13,6 +13,7 @@
 [![SOC 3](https://img.shields.io/badge/SOC-3-Blue)](https://www.aicpa.org/content/dam/aicpa/auditattest/soc/soc3.pdf)
 [![GDPR](https://img.shields.io/badge/GDPR-Compliant-Blue)](https://ec.europa.eu/commission/priorities/justice-and-fundamental-rights/data-protection_en)
 [![CCPA](https://img.shields.io/badge/CCPA-Compliant-Blue)](https://oag.ca.gov/privacy/ccpa)
+[![NIST Cybersecurity Framework](https://img.shields.io/badge/NIST%20Cybersecurity%20Framework-v1.1-Blue)](https://www.nist.gov/cyberframework)
 [![OWASP](https://img.shields.io/badge/OWASP-Security-Red)](https://owasp.org/)
 [![CSA STAR](https://img.shields.io/badge/CSA-STAR-Blue)](https://cloudsecurityalliance.org/star/)
 [![FedRAMP](https://img.shields.io/badge/FedRAMP-Compliant-Blue)](https://www.fedramp.gov/)
