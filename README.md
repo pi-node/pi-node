@@ -20,6 +20,14 @@
 [![SOC 1](https://img.shields.io/badge/SOC-1-Blue)](https://www.aicpa.org/content/dam/aicpa/auditattest/soc/soc1.pdf)
 [![ISO 20000](https://img.shields.io/badge/ISO-20000-Blue)](https://www.iso.org/iso-20000-it-service-management.html)
 [![ISO 22301](https://img.shields.io/badge/ISO-22301-Blue)](https://www.iso.org/iso-22301-business-continuity-management.html)
+[![PCI-DSS](https://img.shields.io/badge/PCI--DSS-Compliant-Red)](https://www.pcisecuritystandards.org/)
+[![HIPAA](https://img.shields.io/badge/HIPAA-Compliant-Blue)](https://www.hhs.gov/hipaa/index.html)
+[![ISO 27017](https://img.shields.io/badge/ISO-27017-Blue)](https://www.iso.org/iso-27017-information-security-for-cloud-services.html)
+[![ISO 27018](https://img.shields.io/badge/ISO-27018-Blue)](https://www.iso.org/iso-27018-protection-of-personally-identifiable-information-in-public-clouds.html)
+[![NIST 800-53](https://img.shields.io/badge/NIST-800--53-Blue)](https://csrc.nist.gov/publications/detail/sp/800-53/final)
+[![NIST 800-171](https://img.shields.io/badge/NIST-800--171-Blue)](https://csrc.nist.gov/publications/detail/sp/800-171/final)
+[![FedRAMP Moderate](https://img.shields.io/badge/FedRAMP-Moderate-Blue)](https://www.fedramp.gov/)
+[![FedRAMP High](https://img.shields.io/badge/FedRAMP-High-Blue)](https://www.fedramp.gov/)
 
 <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/KOSASIH/pi-supernode">pi-supernode</a> by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://www.linkedin.com/in/kosasih-81b46b5a">KOSASIH</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">Creative Commons Attribution 4.0 International<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""></a></p>
 
