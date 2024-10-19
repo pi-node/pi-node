@@ -1,36 +1,69 @@
-# edge_gateway/anomaly_detection/anomaly_detector.py
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
+import logging
+import os
+import json
+import pandas as pd
+from sklearn.ensemble import IsolationForest
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+
+# Configure logging
+logging.basicConfig(filename='anomaly_detector.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class AnomalyDetector:
-    def __init__(self, model_path):
-        self.model = self.load_model(model_path)
+    def __init__(self, config_file='config.json'):
+        self.config = self.load_config(config_file)
+        self.model = IsolationForest(contamination=self.config['contamination'])
+        self.scaler = StandardScaler()
 
-    def load_model(self, model_path):
-        return tf.keras.models.load_model(model_path)
-
-    def detect_anomalies(self, data):
-        # Preprocess data
-        data = self.preprocess_data(data)
-
-        # Make predictions using the LSTM model
-        predictions = self.model.predict(data)
-
-        # Identify anomalies based on prediction confidence
-        anomalies = []
-        for i, pred in enumerate(predictions):
-            if pred < 0.5:
-                anomalies.append((i, pred))
-
-        return anomalies
+    def load_config(self, config_file):
+        """Load configuration from a JSON file."""
+        if os.path.exists(config_file):
+            with open(config_file, 'r') as file:
+                config = json.load(file)
+                logging.info("Configuration loaded successfully.")
+                return config
+        else:
+            logging.error(f"Configuration file {config_file} not found. Using default settings.")
+            return {'contamination': 0.1}  # Default contamination rate
 
     def preprocess_data(self, data):
-        # Normalize and reshape data for LSTM input
-        # ...
-        return data
+        """Preprocess the data for anomaly detection."""
+        logging.info("Starting data preprocessing.")
+        # Scale the data
+        scaled_data = self.scaler.fit_transform(data)
+        logging.info("Data preprocessing completed.")
+        return scaled_data
 
     def train_model(self, data):
-        # Train the LSTM model using the provided data
-        # ...
-        pass
+        """Train the anomaly detection model."""
+        logging.info("Training the anomaly detection model.")
+        scaled_data = self.preprocess_data(data)
+        self.model.fit(scaled_data)
+        logging.info("Model training completed.")
+
+    def detect_anomalies(self, data):
+        """Detect anomalies in the provided data."""
+        logging.info("Detecting anomalies.")
+        scaled_data = self.scaler.transform(data)
+        predictions = self.model.predict(scaled_data)
+        anomalies = data[predictions == -1]
+        logging.info(f"Detected {len(anomalies)} anomalies.")
+        return anomalies
+
+    def load_data(self, data_file):
+        """Load data from a CSV file."""
+        logging.info(f"Loading data from {data_file}.")
+        data = pd.read_csv(data_file)
+        logging.info("Data loaded successfully.")
+        return data
+
+if __name__ == "__main__":
+    detector = AnomalyDetector()
+    # Load data (replace 'data.csv' with your actual data file)
+    data = detector.load_data('data.csv')
+    # Train the model
+    detector.train_model(data)
+    # Detect anomalies
+    anomalies = detector.detect_anomalies(data)
+    print("Anomalies detected:")
+    print(anomalies)
