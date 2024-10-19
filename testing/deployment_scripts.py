@@ -1,22 +1,52 @@
-# deployment_scripts.py
 import os
 import subprocess
+import logging
+from datetime import datetime
 
-def deploy_to_kubernetes():
-    # Deploy to Kubernetes cluster
-    subprocess.run(['kubectl', 'apply', '-f', 'deployment.yaml'])
+# Configure logging
+logging.basicConfig(filename='deployment.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def deploy_to_docker():
-    # Deploy to Docker container
-    subprocess.run(['docker', 'build', '-t', 'pi-supernode', '.'])
-    subprocess.run(['docker', 'run', '-p', '8000:8000', '-d', 'pi-supernode'])
+def run_command(command):
+    """Run a shell command and return the output."""
+    try:
+        result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        logging.info(f"Command executed successfully: {command}")
+        return result.stdout.decode('utf-8')
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Error executing command: {command}\nError: {e.stderr.decode('utf-8')}")
+        raise
 
-def deploy_to_cloud():
-    # Deploy to cloud platform (e.g. AWS, GCP, Azure)
-    # Implement cloud deployment script here
-    pass
+def clone_repository(repo_url, target_dir):
+    """Clone the repository from the given URL."""
+    if not os.path.exists(target_dir):
+        logging.info(f"Cloning repository from {repo_url} to {target_dir}")
+        run_command(f"git clone {repo_url} {target_dir}")
+    else:
+        logging.info(f"Repository already exists at {target_dir}")
 
-if __name__ == '__main__':
-    deploy_to_kubernetes()
-    deploy_to_docker()
-    deploy_to_cloud()
+def install_dependencies(target_dir):
+    """Install the required dependencies using npm."""
+    logging.info(f"Installing dependencies in {target_dir}")
+    run_command(f"cd {target_dir} && npm install")
+
+def start_application(target_dir):
+    """Start the Node.js application."""
+    logging.info(f"Starting application in {target_dir}")
+    run_command(f"cd {target_dir} && npm start")
+
+def deploy(repo_url, target_dir):
+    """Deploy the application."""
+    try:
+        clone_repository(repo_url, target_dir)
+        install_dependencies(target_dir)
+        start_application(target_dir)
+        logging.info("Deployment completed successfully.")
+    except Exception as e:
+        logging.error(f"Deployment failed: {e}")
+
+if __name__ == "__main__":
+    REPO_URL = "https://github.com/KOSASIH/pi-supernode"
+    TARGET_DIR = "/path/to/your/target/directory"  # Update this path as needed
+
+    logging.info("Deployment script started.")
+    deploy(REPO_URL, TARGET_DIR)
