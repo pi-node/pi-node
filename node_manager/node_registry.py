@@ -1,40 +1,76 @@
-# node_registry.py
-import os
+import asyncio
+import logging
 import json
-from typing import Dict, List
+import websockets
+
+# Configure logging
+logging.basicConfig(filename='node_registry.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class NodeRegistry:
-    def __init__(self, registry_file: str = 'node_registry.json'):
-        self.registry_file = registry_file
-        self.nodes: Dict[str, Dict] = self.load_registry()
+    def __init__(self, uri='ws://localhost:8765'):
+        self.uri = uri
+        self.nodes = {}
 
-    def load_registry(self) -> Dict[str, Dict]:
-        if os.path.exists(self.registry_file):
-            with open(self.registry_file, 'r') as f:
-                return json.load(f)
+    async def connect(self):
+        """Establish a WebSocket connection to the node."""
+        try:
+            async with websockets.connect(self.uri) as websocket:
+                logging.info(f"Connected to {self.uri}")
+                await self.listen(websocket)
+        except Exception as e:
+            logging.error(f"Connection error: {e}")
+
+    async def listen(self, websocket):
+        """Listen for messages from the WebSocket."""
+        while True:
+            try:
+                message = await websocket.recv()
+                logging.info(f"Received message: {message}")
+                await self.handle_message(message, websocket)
+            except websockets.ConnectionClosed:
+                logging.info("Connection closed.")
+                break
+            except Exception as e:
+                logging.error(f"Error while listening: {e}")
+
+    async def handle_message(self, message, websocket):
+        """Handle incoming messages for node registration and deregistration."""
+        try:
+            data = json.loads(message)
+            action = data.get('action')
+            node_id = data.get('node_id')
+
+            if action == 'register' and node_id:
+                await self.register_node(node_id)
+            elif action == 'deregister' and node_id:
+                await self.deregister_node(node_id)
+            else:
+                logging.error("Invalid message format or action.")
+        except json.JSONDecodeError:
+            logging.error("Failed to decode JSON message.")
+
+    async def register_node(self, node_id):
+        """Register a new node."""
+        if node_id not in self.nodes:
+            self.nodes[node_id] = {'status': 'active'}
+            logging.info(f"Node {node_id} registered successfully.")
+            # Notify other nodes or systems if necessary
         else:
-            return {}
+            logging.warning(f"Node {node_id} is already registered.")
 
-    def save_registry(self) -> None:
-        with open(self.registry_file, 'w') as f:
-            json.dump(self.nodes, f, indent=4)
-
-    def register_node(self, node_id: str, node_info: Dict) -> None:
-        self.nodes[node_id] = node_info
-        self.save_registry()
-
-    def get_node(self, node_id: str) -> Dict:
-        return self.nodes.get(node_id)
-
-    def get_all_nodes(self) -> List[Dict]:
-        return list(self.nodes.values())
-
-    def update_node(self, node_id: str, node_info: Dict) -> None:
-        if node_id in self.nodes:
-            self.nodes[node_id].update(node_info)
-            self.save_registry()
-
-    def remove_node(self, node_id: str) -> None:
+    async def deregister_node(self, node_id):
+        """Deregister an existing node."""
         if node_id in self.nodes:
             del self.nodes[node_id]
-            self.save_registry()
+            logging.info(f"Node {node_id} deregistered successfully.")
+            # Notify other nodes or systems if necessary
+        else:
+            logging.warning(f"Node {node_id} not found for deregistration.")
+
+    def run(self):
+        """Run the Node Registry."""
+        asyncio.run(self.connect())
+
+if __name__ == "__main__":
+    node_registry = NodeRegistry()
+    node_registry.run()
