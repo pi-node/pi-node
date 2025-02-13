@@ -1,5 +1,6 @@
 ![Static Badge](https://img.shields.io/badge/Pi-Network-violet)
 [![CI](https://github.com/KOSASIH/pi-node/actions/workflows/blank.yml/badge.svg)](https://github.com/KOSASIH/pi-node/actions/workflows/blank.yml)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/KOSASIH/pi-supernode/tree/circleci-project-setup.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/KOSASIH/pi-supernode/tree/circleci-project-setup)
 
 [![ISO 9001:2015](https://img.shields.io/badge/ISO-9001:2015-Blue)](https://www.iso.org/iso-9001-quality-management.html)
 [![ISO 27001:2013](https://img.shields.io/badge/ISO-27001:2013-Green)](https://www.iso.org/iso-iec-27001-information-security.html)
