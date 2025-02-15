@@ -4,7 +4,7 @@
 const PI_COIN = {
     SYMBOL: "PI",
     VALUE: 314159.00, // Fixed value of Pi Coin in USD
-    SUPPLY: 1_000_000_000_000_000, // Total supply of Pi Coin (1 quadrillion for enhanced market cap)
+    SUPPLY: 100_000_000_000, // Updated total supply of Pi Coin (100 billion)
     DYNAMIC_SUPPLY: true, // Enable dynamic supply adjustments for market responsiveness
     IS_STABLECOIN: true, // Indicates that Pi Coin is a stablecoin
     STABILITY_MECHANISM: "Multi-Asset Collateralized with Algorithmic and Market-Driven Adjustments", // Mechanism for maintaining stability
