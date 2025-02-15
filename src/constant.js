@@ -61,16 +61,16 @@ const PI_COIN = {
     MINING_DIFFICULTY_ADJUSTMENT: 0.000001, // Adjustment factor for mining difficulty
     MINING_REWARD: 1000000, // Substantial reward for mining a block to incentivize participation
     MINING_REWARD_ADJUSTMENT: 100.0, // Dynamic adjustment for mining rewards
-    NETWORK_PROTOCOL: "Hybrid PoS + DPoS + Sharding + Layer 2 Solutions + Interoperability Protocol + Zero-Knowledge Proofs + Byzantine Fault Tolerance", // Advanced network protocol for scalability and privacy
+    NETWORK_PROTOCOL: "Hybrid PoS + DPoS + Sharding + Layer 2 Solutions + Interoperability Protocol + Zero-Knowledge Proofs + Byzantine Fault Tolerance + AI-Driven Optimization", // Advanced network protocol for scalability and privacy
     NETWORK_PROTOCOL_VERSION: "12.1.0", // Updated version of the network protocol
     MAX_TRANSACTION_SIZE: 1_000_000_000_000, // Increased maximum transaction size in bytes
     DECIMALS: 42, // Number of decimal places for Pi Coin
     GENESIS_BLOCK_TIMESTAMP: "2025-01-01T00:00:00Z", // Timestamp of the genesis block
-    GOVERNANCE_MODEL: "Decentralized Autonomous Organization (DAO) with Liquid Democracy and Stakeholder Voting and Quadratic Voting", // Governance model for Pi Coin
+    GOVERNANCE_MODEL: "Decentralized Autonomous Organization (DAO) with Liquid Democracy, Stakeholder Voting, and Quadratic Voting", // Governance model for Pi Coin
     GOVERNANCE_VOTING_PERIOD:  8640000, // Voting period in seconds, 100 days
     ENCRYPTION_ALGORITHM: "AES-65536", // State-of-the-art encryption algorithm for securing transactions
     HASHING_ALGORITHM: "SHA-16384/1024", // Advanced hashing algorithm for block verification
-    SIGNATURE_SCHEME: "EdDSA + BLS + Quantum-Resistant + Multi-Signature + Threshold Signatures", // More secure digital signature scheme for transaction signing
+    SIGNATURE_SCHEME: "EdDSA + BLS + Quantum-Resistant + Multi-Signature + Threshold Signatures + Post-Quantum Cryptography", // More secure digital signature scheme for transaction signing
     SECURITY_AUDIT_INTERVAL: 300, // Security audit interval in seconds, 5 minutes
     MAX_PEERS: 1_000_000, // Increased maximum number of peers in the network
     NODE_TIMEOUT: 0.001, // Reduced timeout for node responses in seconds
@@ -115,7 +115,7 @@ const PI_COIN = {
     INTEGRATED_PAYMENT_GATEWAY: true, // Support for integrated payment solutions
     TOKENIZED_ASSET_SUPPORT: true, // Enable support for tokenized assets
     NETWORK_FEE_MODEL: "Dynamic Fee Structure based on Network Demand", // Implement a dynamic fee model to optimize transaction costs
-    USER_RE SOURCES: true, // Allow users to provide feedback and suggestions for improvements
+    USER_RESOURCES: true, // Allow users to provide feedback and suggestions for improvements
     MULTI_LANGUAGE_SUPPORT: true, // Support for multiple languages to cater to a global audience
     EDUCATIONAL_RESOURCES: true, // Provide educational materials for users to understand the ecosystem
     PARTNERSHIP_INTEGRATION: true, // Enable partnerships with other platforms for enhanced utility
@@ -132,6 +132,7 @@ const PI_COIN = {
         TWO_FACTOR_AUTHENTICATION: true, // Enable two-factor authentication for added security
         PHISHING_PROTECTION: true, // Implement measures to protect against phishing attacks
         REGULAR_SECURITY_UPDATES: true, // Ensure regular updates to security protocols
+        ADVANCED_FRAUD_DETECTION: true, // Implement advanced fraud detection mechanisms
     },
 };
 
