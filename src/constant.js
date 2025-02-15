@@ -61,7 +61,7 @@ const PI_COIN = {
     MINING_DIFFICULTY_ADJUSTMENT: 0.000001, // Adjustment factor for mining difficulty
     MINING_REWARD: 1000000, // Substantial reward for mining a block to incentivize participation
     MINING_REWARD_ADJUSTMENT: 100.0, // Dynamic adjustment for mining rewards
-    NETWORK_PROTOCOL: "Hybrid PoS + DPoS + Sharding + Layer 2 Solutions + Interoperability Protocol + Zero-Knowledge Proofs", // Advanced network protocol for scalability and privacy
+    NETWORK_PROTOCOL: "Hybrid PoS + DPoS + Sharding + Layer 2 Solutions + Interoperability Protocol + Zero-Knowledge Proofs + Byzantine Fault Tolerance", // Advanced network protocol for scalability and privacy
     NETWORK_PROTOCOL_VERSION: "12.1.0", // Updated version of the network protocol
     MAX_TRANSACTION_SIZE: 1_000_000_000_000, // Increased maximum transaction size in bytes
     DECIMALS: 42, // Number of decimal places for Pi Coin
@@ -114,6 +114,25 @@ const PI_COIN = {
     DECENTRALIZED_FINANCE_SUPPORT: true, // Enable DeFi features for lending and borrowing
     INTEGRATED_PAYMENT_GATEWAY: true, // Support for integrated payment solutions
     TOKENIZED_ASSET_SUPPORT: true, // Enable support for tokenized assets
+    NETWORK_FEE_MODEL: "Dynamic Fee Structure based on Network Demand", // Implement a dynamic fee model to optimize transaction costs
+    USER_RE SOURCES: true, // Allow users to provide feedback and suggestions for improvements
+    MULTI_LANGUAGE_SUPPORT: true, // Support for multiple languages to cater to a global audience
+    EDUCATIONAL_RESOURCES: true, // Provide educational materials for users to understand the ecosystem
+    PARTNERSHIP_INTEGRATION: true, // Enable partnerships with other platforms for enhanced utility
+    GAMIFICATION_FEATURES: true, // Introduce gamification elements to engage users
+    SOCIAL_TRADING: true, // Allow users to follow and copy successful traders
+    API_ACCESS: true, // Provide API access for developers to build on the platform
+    CUSTOMIZABLE_WALLET: true, // Allow users to customize their wallet experience
+    TRANSACTION_ANALYTICS: true, // Provide analytics tools for users to track their transactions
+    COMMUNITY_REWARDS: true, // Implement a rewards system for community contributions
+    ENVIRONMENTAL_SUSTAINABILITY: true, // Focus on sustainable practices in operations
+    INNOVATION_FUND: 5.0, // Percentage of transaction fees allocated for innovation projects
+    USER_ONBOARDING: true, // Streamlined onboarding process for new users
+    SECURITY_FEATURES: {
+        TWO_FACTOR_AUTHENTICATION: true, // Enable two-factor authentication for added security
+        PHISHING_PROTECTION: true, // Implement measures to protect against phishing attacks
+        REGULAR_SECURITY_UPDATES: true, // Ensure regular updates to security protocols
+    },
 };
 
 module.exports = {
