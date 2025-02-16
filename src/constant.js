@@ -1,9 +1,9 @@
-// Pi Coin Configuration
+// Pi Coin Configuration - Unmatched and Unstoppable
 const PI_COIN = {
     SYMBOL: "PI",
     VALUE: 314159.00, // Fixed value of Pi Coin in USD
     SUPPLY: 100_000_000_000, // Total supply of Pi Coin (100 billion for enhanced market cap)
-    DYNAMIC_SUPPLY: true, // Enable dynamic supply adjustments for market responsiveness
+    DYNAMIC_SUPPLY: true, // Enable dynamic supply adjustments for unparalleled market responsiveness
     IS_STABLECOIN: true, // Indicates that Pi Coin is a stablecoin
     STABILITY_MECHANISM: "Multi-Asset Collateralized with Algorithmic and Market-Driven Adjustments", // Mechanism for maintaining stability
     COLLATERAL_RATIO: 10.0, // Enhanced collateralization ratio for increased stability
@@ -61,9 +61,9 @@ const PI_COIN = {
     MINING_DIFFICULTY_ADJUSTMENT: 0.000001, // Adjustment factor for mining difficulty
     MINING_REWARD: 1000000, // Substantial reward for mining a block to incentivize participation
     MINING_REWARD_ADJUSTMENT: 100.0, // Dynamic adjustment for mining rewards
-    NETWORK_PROTOCOL: "Hybrid PoS + DPoS + Sharding + Layer 2 Solutions + Interoperability Protocol + Zero-Knowledge Proofs + Byzantine Fault Tolerance + AI-Driven Optimization", // Advanced network protocol for scalability and privacy
+    NETWORK_PROTOCOL: "Hybrid PoS + DPoS + Sharding + Layer 2 Solutions + Interoperability Protocol + Zero-Knowledge Proofs + Byzantine Fault Tolerance + AI-Driven Optimization + Quantum-Resistant Mechanisms", // Advanced network protocol for scalability and privacy
     NETWORK_PROTOCOL_VERSION: "12.1.0", // Updated version of the network protocol
-    MAX_TRANSACTION_SIZE: 1_000_000_000_000, // Increased maximum transaction size in bytes
+    MAX_TRANSACTION_SIZE: 1_000_000_000_000 , // Increased maximum transaction size in bytes
     DECIMALS: 42, // Number of decimal places for Pi Coin
     GENESIS_BLOCK_TIMESTAMP: "2025-01-01T00:00:00Z", // Timestamp of the genesis block
     GOVERNANCE_MODEL: "Decentralized Autonomous Organization (DAO) with Liquid Democracy, Stakeholder Voting, and Quadratic Voting", // Governance model for Pi Coin
