@@ -134,6 +134,11 @@ const PI_COIN = {
         REGULAR_SECURITY_UPDATES: true, // Ensure regular updates to security protocols
         ADVANCED_FRAUD_DETECTION: true, // Implement advanced fraud detection mechanisms
     },
+    GLOBAL_NETWORK_CONNECTIVITY: true, // Ensure seamless connectivity to global financial systems
+    BLOCKCHAIN_INTERACTION: true, // Enable interaction with various blockchain networks
+    CRYPTO_EXCHANGE_INTEGRATION: true, // Support for integration with major cryptocurrency exchanges
+    FINANCIAL_DATA_FEED: true, // Access to real-time financial data feeds for accurate pricing
+    USER_ACCOUNT_VERIFICATION: true, // Implement user account verification processes for security
 };
 
 module.exports = {
