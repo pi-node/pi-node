@@ -139,6 +139,7 @@ const PI_COIN = {
     CRYPTO_EXCHANGE_INTEGRATION: true, // Support for integration with major cryptocurrency exchanges
     FINANCIAL_DATA_FEED: true, // Access to real-time financial data feeds for accurate pricing
     USER_ACCOUNT_VERIFICATION: true, // Implement user account verification processes for security
+    AUTOMATED_CONNECTIVITY: true, // Enable automatic connection to the entire Pi Network ecosystem
 };
 
 module.exports = {
