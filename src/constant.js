@@ -63,11 +63,11 @@ const PI_COIN = {
     MINING_REWARD_ADJUSTMENT: 100.0, // Dynamic adjustment for mining rewards
     NETWORK_PROTOCOL: "Hybrid PoS + DPoS + Sharding + Layer 2 Solutions + Interoperability Protocol + Zero-Knowledge Proofs + Byzantine Fault Tolerance + AI-Driven Optimization + Quantum-Resistant Mechanisms", // Advanced network protocol for scalability and privacy
     NETWORK_PROTOCOL_VERSION: "12.1.0", // Updated version of the network protocol
-    MAX_TRANSACTION_SIZE: 1_000_000_000_000 , // Increased maximum transaction size in bytes
+    MAX_TRANSACTION _SIZE: 1_000_000_000_000, // Increased maximum transaction size in bytes
     DECIMALS: 42, // Number of decimal places for Pi Coin
     GENESIS_BLOCK_TIMESTAMP: "2025-01-01T00:00:00Z", // Timestamp of the genesis block
     GOVERNANCE_MODEL: "Decentralized Autonomous Organization (DAO) with Liquid Democracy, Stakeholder Voting, and Quadratic Voting", // Governance model for Pi Coin
-    GOVERNANCE_VOTING_PERIOD:  8640000, // Voting period in seconds, 100 days
+    GOVERNANCE_VOTING_PERIOD: 8640000, // Voting period in seconds, 100 days
     ENCRYPTION_ALGORITHM: "AES-65536", // State-of-the-art encryption algorithm for securing transactions
     HASHING_ALGORITHM: "SHA-16384/1024", // Advanced hashing algorithm for block verification
     SIGNATURE_SCHEME: "EdDSA + BLS + Quantum-Resistant + Multi-Signature + Threshold Signatures + Post-Quantum Cryptography", // More secure digital signature scheme for transaction signing
@@ -114,7 +114,7 @@ const PI_COIN = {
     DECENTRALIZED_FINANCE_SUPPORT: true, // Enable DeFi features for lending and borrowing
     INTEGRATED_PAYMENT_GATEWAY: true, // Support for integrated payment solutions
     TOKENIZED_ASSET_SUPPORT: true, // Enable support for tokenized assets
-    NETWORK_FEE_MODEL: "Dynamic Fee Structure based on Network Demand", // Implement a dynamic fee model to optimize transaction costs
+    NETWORK_FEE_MODEL : "Dynamic Fee Structure based on Network Demand", // Implement a dynamic fee model to optimize transaction costs
     USER_RESOURCES: true, // Allow users to provide feedback and suggestions for improvements
     MULTI_LANGUAGE_SUPPORT: true, // Support for multiple languages to cater to a global audience
     EDUCATIONAL_RESOURCES: true, // Provide educational materials for users to understand the ecosystem
@@ -142,6 +142,4 @@ const PI_COIN = {
     AUTOMATED_CONNECTIVITY: true, // Enable automatic connection to the entire Pi Network ecosystem
 };
 
-module.exports = {
-    PI_COIN,
-};
+// Finalize and distribute the configuration for global recognition and implementation.
