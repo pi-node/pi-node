@@ -20,8 +20,10 @@ contract StableCoin is Ownable {
     IPriceFeed public priceFeed; // Price feed contract
 
     mapping(address => uint256) public balanceOf;
+    mapping(address => mapping(address => uint256)) public allowance;
 
     event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
     event ValueAdjusted(uint256 newValue);
     event TokensMinted(address to, uint256 amount);
     event TokensBurned(address from, uint256 amount);
@@ -43,7 +45,28 @@ contract StableCoin is Ownable {
         return true;
     }
 
-    // Function to mint new tokens (not used in this implementation)
+    // Function to approve token spending
+    function approve(address spender, uint256 amount) external returns (bool) {
+        allowance[msg.sender][spender] = amount;
+        emit Approval(msg.sender, spender, amount);
+        return true;
+    }
+
+    // Function to transfer tokens on behalf of another address
+    function transferFrom(address from, address to, uint256 amount) external returns (bool) {
+        require(from != address(0), "Invalid address");
+        require(to != address(0), "Invalid address");
+        require(balanceOf[from] >= amount, "Insufficient balance");
+        require(allowance[from][msg.sender] >= amount, "Allowance exceeded");
+
+        balanceOf[from] = balanceOf[from].sub(amount);
+        balanceOf[to] = balanceOf[to].add(amount);
+        allowance[from][msg.sender] = allowance[from][msg.sender].sub(amount);
+        emit Transfer(from, to, amount);
+        return true;
+    }
+
+    // Function to mint new tokens
     function mint(address to, uint256 amount) external onlyOwner {
         require(totalSupply.add(amount) <= TOTAL_SUPPLY_CAP, "Supply cap exceeded");
         totalSupply = totalSupply.add(amount);
@@ -68,7 +91,7 @@ contract StableCoin is Ownable {
             mint(msg.sender, amountToMint);
         } else if (marketPrice > STABLE_VALUE) {
             // Burn tokens if the market price is above the stable value
-            uint256 amountToBurn = marketPrice.sub(STABLE_VALUE).mul(totalSupply).div(marketPrice);
+            uint256 amountToBurn = marketPrice.sub(STABLE_VALUE ).mul(totalSupply).div(marketPrice);
             burn(amountToBurn);
         }
         emit ValueAdjusted(marketPrice);
@@ -77,5 +100,15 @@ contract StableCoin is Ownable {
     // Function to get the current price of the stablecoin
     function getCurrentPrice() external view returns (uint256) {
         return priceFeed.getLatestPrice();
+    }
+
+    // Function to get the balance of an account
+    function balanceOfAccount(address account) external view returns (uint256) {
+        return balanceOf[account];
+    }
+
+    // Function to get the total supply of the stablecoin
+    function getTotalSupply() external view returns (uint256) {
+        return totalSupply;
     }
 }
