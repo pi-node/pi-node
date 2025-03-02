@@ -25,13 +25,13 @@ contract StableCoin is Ownable {
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event ValueAdjusted(uint256 newValue);
-    event TokensMinted(address to, uint256 amount);
-    event TokensBurned(address from, uint256 amount);
+    event TokensMinted(address indexed to, uint256 amount);
+    event TokensBurned(address indexed from, uint256 amount);
 
     constructor(address _priceFeed) {
-        totalSupply = TOTAL_SUPPLY_CAP; // Set total supply to 100 billion
+        require(_priceFeed != address(0), "Invalid price feed address");
         priceFeed = IPriceFeed(_priceFeed);
-        balanceOf[msg.sender] = totalSupply; // Assign initial supply to the contract deployer
+        totalSupply = 0; // Start with zero total supply
     }
 
     // Function to transfer tokens
@@ -47,6 +47,7 @@ contract StableCoin is Ownable {
 
     // Function to approve token spending
     function approve(address spender, uint256 amount) external returns (bool) {
+        require(spender != address(0), "Invalid address");
         allowance[msg.sender][spender] = amount;
         emit Approval(msg.sender, spender, amount);
         return true;
@@ -68,10 +69,12 @@ contract StableCoin is Ownable {
 
     // Function to mint new tokens
     function mint(address to, uint256 amount) external onlyOwner {
+        require(to != address(0), "Invalid address");
         require(totalSupply.add(amount) <= TOTAL_SUPPLY_CAP, "Supply cap exceeded");
         totalSupply = totalSupply.add(amount);
         balanceOf[to] = balanceOf[to].add(amount);
         emit TokensMinted(to, amount);
+        emit Transfer(address(0), to, amount); // Emit transfer event for minting
     }
 
     // Function to burn tokens
@@ -80,6 +83,7 @@ contract StableCoin is Ownable {
         balanceOf[msg.sender] = balanceOf[msg.sender].sub(amount);
         totalSupply = totalSupply.sub(amount);
         emit TokensBurned(msg.sender, amount);
+        emit Transfer(msg.sender, address(0), amount); // Emit transfer event for burning
     }
 
     // Function to adjust the supply based on market conditions
@@ -91,7 +95,7 @@ contract StableCoin is Ownable {
             mint(msg.sender, amountToMint);
         } else if (marketPrice > STABLE_VALUE) {
             // Burn tokens if the market price is above the stable value
-            uint256 amountToBurn = marketPrice.sub(STABLE_VALUE ).mul(totalSupply).div(marketPrice);
+            uint256 amountToBurn = marketPrice.sub(STABLE_VALUE).mul(totalSupply).div(marketPrice);
             burn(amountToBurn);
         }
         emit ValueAdjusted(marketPrice);
@@ -104,11 +108,27 @@ contract StableCoin is Ownable {
 
     // Function to get the balance of an account
     function balanceOfAccount(address account) external view returns (uint256) {
-        return balanceOf[account];
+        return balanceOf[ account];
     }
 
     // Function to get the total supply of the stablecoin
     function getTotalSupply() external view returns (uint256) {
         return totalSupply;
     }
+
+    // Function to withdraw Ether from the contract (if any)
+    function withdrawEther() external onlyOwner {
+        payable(owner()).transfer(address(this).balance);
+    }
+
+    // Function to withdraw ERC20 tokens from the contract
+    function withdrawTokens(address tokenAddress, uint256 amount) external onlyOwner {
+        require(tokenAddress != address(this), "Cannot withdraw the stablecoin itself");
+        IERC20(tokenAddress).transfer(owner(), amount);
+    }
+}
+
+// Interface for ERC20 token standard
+interface IERC20 {
+    function transfer(address recipient, uint256 amount) external returns (bool);
 }
