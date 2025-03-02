@@ -1,9 +1,11 @@
 // Import required packages
 const express = require('express');
 const bodyParser = require('body-parser');
-const Web3 = require('web3');
-const StableCoinABI = require('./abis/StableCoin.json'); // Import the ABI of the StableCoin contract
-const PriceFeedABI = require('./abis/PriceFeed.json'); // Import the ABI of the PriceFeed contract
+const StellarSdk = require('stellar-sdk');
+const dotenv = require('dotenv');
+
+// Load environment variables from .env file
+dotenv.config();
 
 // Initialize Express app
 const app = express();
@@ -12,50 +14,51 @@ const port = process.env.PORT || 3000;
 // Middleware
 app.use(bodyParser.json());
 
-// Connect to Ethereum network (e.g., Ganache, Infura, etc.)
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545')); // Change to your provider
+// Configure Stellar SDK
+StellarSdk.Network.useTestNetwork(); // Use Test Network
+const server = new StellarSdk.Server(process.env.STELLAR_HORIZON_URL || 'https://horizon-testnet.stellar.org'); // Default to Stellar Testnet
 
-// Set contract addresses (replace with your deployed contract addresses)
-const stableCoinAddress = '0xYourStableCoinAddress'; // Replace with actual StableCoin contract address
-const priceFeedAddress = '0xYourPriceFeedAddress'; // Replace with actual PriceFeed contract address
-
-// Create contract instances
-const stableCoinContract = new web3.eth.Contract(StableCoinABI, stableCoinAddress);
-const priceFeedContract = new web3.eth.Contract(PriceFeedABI, priceFeedAddress);
+// Pi Coin configuration
+const piCoinAsset = new StellarSdk.Asset(process.env.PI_COIN_ASSET_CODE || 'PiCoin', process.env.PI_COIN_ISSUER || 'GXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'); // Replace with actual issuer address
 
 // Endpoint to get the balance of an account
 app.get('/balance/:address', async (req, res) => {
     try {
-        const balance = await stableCoinContract.methods.balanceOf(req.params.address).call();
-        res.json({ balance: balance });
+        const account = await server.loadAccount(req.params.address);
+        const balance = account.balances.find(b => b.asset_code === piCoinAsset.getCode());
+        res.json({ balance: balance ? balance.balance : 0 });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error fetching balance:', error);
+        res.status(500).json({ error: 'Failed to fetch balance. ' + error.message });
     }
 });
 
-// Endpoint to transfer tokens
-app.post('/transfer', async (req, res) => {
-    const { from, to, amount } = req.body;
+// Endpoint to send Pi Coin
+app.post('/send', async (req, res) => {
+    const { from, to, amount, secret } = req.body;
 
     try {
-        const accounts = await web3.eth.getAccounts();
-        const result = await stableCoinContract.methods.transfer(to, amount).send({ from: from });
-        res.json({ transactionHash: result.transactionHash });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+        const sourceKeypair = StellarSdk.Keypair.fromSecret(secret);
+        const account = await server.loadAccount(sourceKeypair.publicKey());
 
-// Endpoint to adjust supply based on market conditions
-app.post('/adjust-supply', async (req, res) => {
-    const { owner } = req.body;
+        const transaction = new StellarSdk.TransactionBuilder(account, {
+            fee: StellarSdk.BASE_FEE,
+            networkPassphrase: StellarSdk.Networks.TESTNET,
+        })
+            .addOperation(StellarSdk.Operation.payment({
+                destination: to,
+                asset: piCoinAsset,
+                amount: amount.toString(),
+            }))
+            .setTimeout(30)
+            .build();
 
-    try {
-        const accounts = await web3.eth.getAccounts();
-        const result = await stableCoinContract.methods.adjustSupply().send({ from: owner });
-        res.json({ transactionHash: result.transactionHash });
+        transaction.sign(sourceKeypair);
+        const result = await server.submitTransaction(transaction);
+        res.json({ transactionHash: result.hash });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error sending Pi Coin:', error);
+        res.status(500).json({ error: 'Failed to send Pi Coin. ' + error.message });
     }
 });
 
