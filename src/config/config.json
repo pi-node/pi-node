@@ -1,0 +1,35 @@
+{
+    "app": {
+        "name": "Pi Coin Blockchain System",
+        "version": "1.0.0",
+        "port": 3000
+    },
+    "logging": {
+        "logLevel": "info",
+        "logFilePath": "./src/logs/app.log"
+    },
+    "blockchain": {
+        "difficulty": 2,
+        "reward": 50,
+        "maxTransactionsPerBlock": 10
+    },
+    "monitoring": {
+        "alertThreshold": 100,
+        "suspiciousAccounts": ["Eve", "Mallory"]
+    },
+    "ai": {
+        "anomalyDetection": {
+            "epochs": 100,
+            "batchSize": 32
+        },
+        "transactionPrediction": {
+            "epochs": 100,
+            "batchSize": 32
+        }
+    },
+    "database": {
+        "url": "mongodb://localhost:27017/piCoin",
+        "username": "yourUsername",
+        "password": "yourPassword"
+    }
+}
