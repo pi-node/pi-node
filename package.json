@@ -1,0 +1,34 @@
+{
+  "name": "pi-supernode",
+  "version": "0.5.1",
+  "description": "A supernode implementation for Pi Coin utilizing advanced quantum and AI technologies to prevent manipulation across exchanges.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jest",
+    "setup": "bash scripts/setup.sh",
+    "monitor": "bash scripts/monitor.sh",
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "blockchain",
+    "pi-coin",
+    "quantum",
+    "ai",
+    "supernode"
+  ],
+  "author": "KOSASIH",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "body-parser": "^1.19.0",
+    "stellar-sdk": "^9.0.0",
+    "dotenv": "^10.0.0",
+    "express-validator": "^6.14.0",
+    "nodemon": "^2.0.7"
+  },
+  "devDependencies": {
+    "jest": "^27.0.0",
+    "eslint": "^7.0.0"
+  }
+}
