@@ -33,7 +33,13 @@ app.use((req, res, next) => {
 });
 
 // Use the routes
-app.use(routes);
+app.use('/api', routes); // Prefix all routes with /api
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Something went wrong!' });
+});
 
 // Start the server
 app.listen(port, () => {
