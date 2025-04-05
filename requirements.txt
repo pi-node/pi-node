@@ -1,0 +1,25 @@
+# Core dependencies
+Flask==2.2.2                # For building the REST API
+Flask-RESTful==0.3.9        # For creating RESTful APIs easily
+requests==2.28.1            # For making HTTP requests to other nodes or APIs
+pytest==7.1.2               # For running tests
+pytest-cov==3.0.0           # For measuring code coverage in tests
+sqlalchemy==1.4.39          # For database interactions (if using a database)
+pandas==1.4.2               # For data manipulation and analysis (optional)
+numpy==1.22.3               # For numerical operations (optional)
+
+# Blockchain specific libraries
+pycryptodome==3.15.0        # For cryptographic functions (hashing, signing)
+web3==5.29.0                # For interacting with Ethereum blockchain (if applicable)
+
+# Optional: For smart contracts
+eth-brownie==1.19.0         # For developing and testing Ethereum smart contracts
+
+# Optional: For Docker support
+docker==5.0.3               # For managing Docker containers from Python
+
+# Optional: For logging
+loguru==0.6.0               # For advanced logging capabilities
+
+# Optional: For configuration management
+python-dotenv==0.20.0       # For loading environment variables from a .env file
