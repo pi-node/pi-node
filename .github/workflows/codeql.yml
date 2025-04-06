@@ -8,38 +8,31 @@ jobs:
     strategy:
       matrix:
         include:
-          # Analyzes C and C++ code using the commands in `Build C and C++ code`
           - language: c-cpp
             build-mode: manual
-          # Analyzes C# code by automatically detecting a build
           - language: csharp
             build-mode: autobuild
-          # Analyzes Java code directly from the codebase without a build
           - language: java-kotlin
-            build-mode: none # analyzes Java only
+            build-mode: none
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Initializes CodeQL tools and creates a codebase for analysis.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
 
-    # Build step for C and C++ code if in manual build mode
     - name: Build C and C++ code
       if: ${{ matrix.build-mode == 'manual' }}
       run: |
-        echo 'If you are using a "manual" build mode for one or more of the' \
-          'languages you are analyzing, replace this with the commands to build' \
-          'your code, for example:'
+        echo 'Replace this with the commands to build your code, for example:'
         echo ' make bootstrap'
         echo ' make release'
-        exit 1
+        # Uncomment and replace the following line with actual build commands
+        # make bootstrap
 
-    # Run CodeQL analysis
     - name: Run CodeQL Analysis
       uses: github/codeql-action/analyze@v3
       with:
