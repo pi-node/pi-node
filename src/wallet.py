@@ -1,134 +1,156 @@
 import os
 import json
-import hashlib
-import secrets
-import base64
-from typing import Dict, Any, List, Tuple
-from cryptography.fernet import Fernet
-from mnemonic import Mnemonic
-from bip32 import BIP32
-from bip44 import BIP44
+import logging
+import requests
+import asyncio
+from Crypto.PublicKey import RSA
+from Crypto.Hash import SHA256
+from Crypto.Signature import pkcs1_15
+from dotenv import load_dotenv
+from datetime import datetime
 
-class Wallet:
-    def __init__(self, password: str):
-        self.password = password
-        self.addresses: Dict[str, float] = {}  # Address to balance mapping
-        self.transactions: List[Dict[str, Any]] = []  # List of transactions
-        self.mnemonic = Mnemonic("english")
-        self.bip32 = None
-        self.load_or_create_wallet()
+# Load environment variables
+load_dotenv()
 
-    def load_or_create_wallet(self):
-        """Load existing wallet or create a new one."""
-        if os.path.exists("wallet.json"):
-            self.load_wallet("wallet.json")
+# Load configuration from config.py
+from config import (
+    EXTERNAL_API_URL,
+    TRANSACTION_FEE,
+    LOG_LEVEL,
+)
+
+# Configure logging
+logging.basicConfig(level=LOG_LEVEL, format='%(asctime)s - %(levelname)s - %(message)s')
+
+class PiWallet:
+    def __init__(self):
+        self.api_url = EXTERNAL_API_URL
+        self.wallet = {
+            'address': None,
+            'private_key': None,
+            'balance': 0,
+            'transaction_history': []
+        }
+
+    def generate_wallet(self):
+        key = RSA.generate(2048)
+        self.wallet['private_key'] = key.export_key()
+        self.wallet['address'] = self.get_address_from_private_key(self.wallet['private_key'])
+        logging.info(f'New wallet created: Address: {self.wallet["address"]}')
+        self.save_wallet()
+
+    def save_wallet(self):
+        with open('wallet.json', 'w') as f:
+            json.dump({
+                'address': self.wallet['address'],
+                'private_key': self.wallet['private_key'].decode('utf-8')
+            }, f, indent=2)
+        logging.info('Wallet saved to wallet.json')
+
+    def load_wallet(self):
+        if os.path.exists('wallet.json'):
+            with open('wallet.json', 'r') as f:
+                wallet_data = json.load(f)
+                self.wallet['address'] = wallet_data['address']
+                self.wallet['private_key'] = wallet_data['private_key'].encode('utf-8')
+                logging.info(f'Wallet loaded: Address: {self.wallet["address"]}')
         else:
-            self.create_wallet()
+            logging.error('No wallet found. Please create a new wallet.')
 
-    def create_wallet(self):
-        """Create a new HD wallet."""
-        seed = self.mnemonic.to_seed(self.mnemonic.generate())
-        self.bip32 = BIP32.from_seed(seed)
-        for i in range(5):  # Generate 5 addresses for demonstration
-            address = self.generate_address(i)
-            self.addresses[address] = 0.0  # Initialize balance to 0
+    def get_address_from_private_key(self, private_key):
+        key = RSA.import_key(private_key)
+        public_key = key.publickey()
+        return SHA256.new(public_key.export_key()).hexdigest()[:42]  # Simplified address generation
 
-    def generate_address(self, index: int) -> str:
-        """Generate a new wallet address from the HD wallet."""
-        child_key = self.bip32.get_child(index)
-        public_key = child_key.public_key.hex()
-        address = self.hash_address(public_key)
-        return address
+    async def check_balance(self):
+        try:
+            response = await asyncio.to_thread(requests.get, f'{self.api_url}/balance/{self.wallet["address"]}')
+            self.wallet['balance'] = response.json().get('balance', 0)
+            logging.info(f'Balance for {self.wallet["address"]}: {self.wallet["balance"]} Pi')
+        except Exception as e:
+            logging.error(f'Error checking balance: {e}')
 
-    def hash_address(self, public_key: str) -> str:
-        """Create a wallet address from a public key."""
-        return hashlib.sha256(public_key.encode()).hexdigest()
+    async def send_coins(self, to_address, amount):
+        if amount > self.wallet['balance']:
+            logging.error('Insufficient balance')
+            return
 
-    def get_balance(self, address: str) -> float:
-        """Get the balance of a specific address."""
-        return self.addresses.get(address, 0.0)
-
-    def create_transaction(self, from_address: str, to_address: str, amount: float) -> bool:
-        """Create a transaction from one address to another."""
-        if from_address not in self.addresses:
-            raise Exception("From address does not exist.")
-        if to_address not in self.addresses:
-            raise Exception("To address does not exist.")
-        if self.addresses[from_address] < amount:
-            raise Exception("Insufficient balance.")
-
-        # Create the transaction
         transaction = {
-            "from": from_address,
-            "to": to_address,
-            "amount": amount
+            'from': self.wallet['address'],
+            'to': to_address,
+            'amount': amount,
+            'timestamp': int(datetime.now().timestamp())
         }
-        self.transactions.append(transaction)
 
-        # Update balances
-        self.addresses[from_address] -= amount
-        self.addresses[to_address] += amount
-        return True
+        # Sign the transaction
+        key = RSA.import_key(self.wallet['private_key'])
+        signature = pkcs1_15.new(key).sign(SHA256.new(json.dumps(transaction).encode('utf-8')))
+        transaction['signature'] = signature.hex()
 
-    def get_transactions(self) -> List[Dict[str, Any]]:
-        """Get the list of transactions."""
-        return self.transactions
+        try:
+            response = await asyncio.to_thread(requests.post, f'{self.api_url}/send', json=transaction)
+            if response.status_code == 200:
+                logging.info(f'Transaction successful: {response.json().get("transactionId")}')
+                self.wallet['balance'] -= amount  # Update local balance
+                transaction['status'] = 'sent'
+                self.wallet['transaction_history'].append(transaction)  # Log transaction
+            else:
+                logging.error(f'Error sending coins: {response.text}')
+        except Exception as e:
+            logging.error(f'Error sending coins: {e}')
 
-    def save_wallet(self, filename: str):
-        """Save the wallet to a file with encryption."""
-        wallet_data = {
-            "addresses": self.addresses,
-            "transactions": self.transactions
-        }
-        encrypted_data = self.encrypt_data(json.dumps(wallet_data))
-        with open(filename, 'wb') as f:
-            f.write(encrypted_data)
+    def display_wallet_info(self):
+        logging.info('Wallet Information:')
+        logging.info(f'Address: {self.wallet["address"]}')
+        logging.info(f'Balance: {self.wallet["balance"]} Pi')
+        logging.info('Transaction History:')
+        for tx in self.wallet['transaction_history']:
+            logging.info(f'Transaction: {tx}')
 
-    def load_wallet(self, filename: str):
-        """Load the wallet from a file with decryption."""
-        if not os.path.exists(filename):
-            raise Exception("Wallet file does not exist.")
-        with open(filename, 'rb') as f:
-            encrypted_data = f.read()
-            data = self.decrypt_data(encrypted_data)
-            wallet_data = json.loads(data)
-            self.addresses = wallet_data.get("addresses", {})
-            self.transactions = wallet_data.get("transactions", [])
+    def backup_wallet(self):
+        backup_file = f'wallet_backup_{self.wallet["address"]}.json'
+        with open(backup_file, 'w') as f:
+            json.dump(self.wallet, f, indent =2)
+        logging.info(f'Wallet backed up to {backup_file}')
 
-    def encrypt_data(self, data: str) -> bytes:
-        """Encrypt data using a symmetric key derived from the password."""
-        key = base64.urlsafe_b64encode(hashlib.sha256(self.password.encode()).digest())
-        fernet = Fernet(key)
-        return fernet.encrypt(data.encode())
+    def restore_wallet(self, backup_file):
+        if os.path.exists(backup_file):
+            with open(backup_file, 'r') as f:
+                wallet_data = json.load(f)
+                self.wallet = wallet_data
+                logging.info(f'Wallet restored from {backup_file}')
+        else:
+            logging.error('Backup file not found.')
 
-    def decrypt_data(self, encrypted_data: bytes) -> str:
-        """Decrypt data using a symmetric key derived from the password."""
-        key = base64.urlsafe_b64encode(hashlib.sha256(self.password.encode()).digest())
-        fernet = Fernet(key)
-        return fernet.decrypt(encrypted_data).decode()
+# Command-line interface for user interaction
+async def main():
+    import argparse
 
-# Example usage
-if __name__ == "__main__":
-    password = input("Enter a password for your wallet: ")
-    wallet = Wallet(password)
+    parser = argparse.ArgumentParser(description='Pi Wallet CLI')
+    parser.add_argument('command', choices=['create', 'load', 'balance', 'send', 'info', 'backup', 'restore'], help='Command to execute')
+    parser.add_argument('--to', type=str, help='Recipient address for sending coins')
+    parser.add_argument('--amount', type=float, help='Amount of coins to send')
+    parser.add_argument('--backup_file', type=str, help='Backup file to restore from')
 
-    # Generate addresses
-    for i in range(5):
-        address = wallet.generate_address(i)
-        print(f"Address {i}: {address}, Balance: {wallet.get_balance(address)}")
+    args = parser.parse_args()
+    wallet = PiWallet()
 
-    # Create a transaction
-    address1 = list(wallet.addresses.keys())[0]
-    address2 = list(wallet.addresses.keys())[1]
-    wallet.addresses[address1] = 100.0  # Manually set balance for testing
-    wallet.create_transaction(address1, address2, 50.0)
+    if args.command == 'create':
+        wallet.generate_wallet()
+    elif args.command == 'load':
+        wallet.load_wallet()
+    elif args.command == 'balance':
+        await wallet.check_balance()
+    elif args.command == 'send' and args.to and args.amount:
+        await wallet.send_coins(args.to, args.amount)
+    elif args.command == 'info':
+        wallet.display_wallet_info()
+    elif args.command == 'backup':
+        wallet.backup_wallet()
+    elif args.command == 'restore' and args.backup_file:
+        wallet.restore_wallet(args.backup_file)
+    else:
+        parser.print_help()
 
-    print(f"Transaction successful: {wallet.get_transactions()}")
-    print(f"Address 1 Balance: {wallet.get_balance(address1)}")
-    print(f"Address 2 Balance: {wallet.get_balance(address2)}")
-
-    # Save and load wallet
-    wallet.save_wallet("my_wallet.json")
-    new_wallet = Wallet(password)
-    new_wallet.load_wallet("my_wallet.json")
-    print(f"Loaded Address 1 Balance: {new_wallet.get_balance(address1)}")
+if __name__ == '__main__':
+    asyncio.run(main())
