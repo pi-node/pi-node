@@ -1,135 +1,173 @@
 const crypto = require('crypto');
+const rsa = require('node-rsa');
 
-/**
- * Class representing a Transaction
- */
-class Transaction {
-    constructor(sender, receiver, amount) {
-        this.sender = sender; // Sender's address
-        this.receiver = receiver; // Receiver's address
-        this.amount = amount; // Transaction amount
-        this.timestamp = Date.now(); // Timestamp of the transaction
-    }
-
-    /**
-     * Returns a string representation of the transaction
-     */
-    toString() {
-        return JSON.stringify(this);
-    }
-}
-
-/**
- * Class representing a Block in the blockchain
- */
 class Block {
     constructor(index, previousHash, timestamp, transactions, hash, nonce) {
-        this.index = index; // Block index
-        this.previousHash = previousHash; // Hash of the previous block
-        this.timestamp = timestamp; // Timestamp of block creation
-        this.transactions = transactions; // Array of transactions
-        this.hash = hash; // Hash of the current block
-        this.nonce = nonce; // Nonce for proof of work
+        this.index = index;
+        this.previousHash = previousHash;
+        this.timestamp = timestamp;
+        this.transactions = transactions;
+        this.hash = hash;
+        this.nonce = nonce;
+    }
+
+    toObject() {
+        return {
+            index: this.index,
+            previousHash: this.previousHash,
+            timestamp: this.timestamp,
+            transactions: this.transactions,
+            hash: this.hash,
+            nonce: this.nonce
+        };
     }
 }
 
-/**
- * Class representing the Blockchain
- */
 class Blockchain {
     constructor() {
-        this.chain = []; // Array to hold the blockchain
-        this.pendingTransactions = []; // Array to hold pending transactions
-        this.createGenesisBlock(); // Create the first block
-        this.difficulty = 2; // Difficulty for proof of work
+        this.chain = [];
+        this.currentTransactions = [];
+        this.piValue = 314159.00; // Set the value of Pi Coin
+        this.users = {}; // Store user credentials
+        this.createGenesisBlock();
     }
 
-    /**
-     * Creates the genesis block (the first block in the blockchain)
-     */
     createGenesisBlock() {
-        const genesisBlock = new Block(0, "0", Date.now(), [], this.calculateHash(0, "0", Date.now(), [], 0), 0);
+        const genesisBlock = new Block(0, "0", Date.now(), [], this.hashBlock(0, "0", Date.now(), [], 0), 0);
         this.chain.push(genesisBlock);
     }
 
-    /**
-     * Calculates the hash of a block
-     * @param {number} index - Block index
-     * @param {string} previousHash - Hash of the previous block
-     * @param {number} timestamp - Timestamp of block creation
-     * @param {Array} transactions - Array of transactions
-     * @param {number} nonce - Nonce for proof of work
-     * @returns {string} - The calculated hash
-     */
-    calculateHash(index, previousHash, timestamp, transactions, nonce) {
-        return crypto.createHash('sha256').update(index + previousHash + timestamp + JSON.stringify(transactions) + nonce).digest('hex');
+    hashBlock(index, previousHash, timestamp, transactions, nonce) {
+        const blockString = JSON.stringify({
+            index,
+            previousHash,
+            timestamp,
+            transactions,
+            nonce
+        });
+        return crypto.createHash('sha256').update(blockString).digest('hex');
     }
 
-    /**
-     * Adds a new transaction to the pending transactions
-     * @param {Transaction} transaction - The transaction to add
-     */
-    addTransaction(transaction) {
-        if (!transaction.sender || !transaction.receiver || !transaction.amount) {
-            throw new Error("Invalid transaction");
+    addTransaction(sender, recipient, amount, signature) {
+        if (this.verifySignature(sender, signature)) {
+            this.currentTransactions.push({
+                sender,
+                recipient,
+                amount,
+                timestamp: Date.now()
+            });
+        } else {
+            throw new Error("Invalid transaction signature.");
         }
-        this.pendingTransactions.push(transaction);
     }
 
-    /**
-     * Creates a new block and adds it to the blockchain
-     * @returns {Block} - The newly created block
-     */
     mineBlock() {
         const previousBlock = this.chain[this.chain.length - 1];
-        const newIndex = previousBlock.index + 1;
-        const newTimestamp = Date.now();
-        let nonce = 0;
-        let hash;
+        const index = previousBlock.index + 1;
+        const timestamp = Date.now();
+        const nonce = this.proofOfWork(previousBlock.nonce);
+        const hashValue = this.hashBlock(index, previousBlock.hash, timestamp, this.currentTransactions, nonce);
 
-        // Proof of Work
-        do {
-            nonce++;
-            hash = this.calculateHash(newIndex, previousBlock.hash, newTimestamp, this.pendingTransactions, nonce);
-        } while (hash.substring(0, this.difficulty) !== Array(this.difficulty + 1).join("0"));
-
-        const newBlock = new Block(newIndex, previousBlock.hash, newTimestamp, this.pendingTransactions, hash, nonce);
+        const newBlock = new Block(index, previousBlock.hash, timestamp, this.currentTransactions, hashValue, nonce);
         this.chain.push(newBlock);
-        this.pendingTransactions = []; // Reset pending transactions
+        this.currentTransactions = []; // Reset the current transactions
         return newBlock;
     }
 
-    /**
-     * Gets the entire blockchain
-     * @returns {Array} - The blockchain
-     */
+    proofOfWork(lastNonce) {
+        let nonce = 0;
+        while (!this.validProof(lastNonce, nonce)) {
+            nonce++;
+        }
+        return nonce;
+    }
+
+    validProof(lastNonce, nonce) {
+        const guess = `${lastNonce}${nonce}`;
+        const guessHash = crypto.createHash('sha256').update(guess).digest('hex');
+        return guessHash.startsWith("0000"); // Difficulty level
+    }
+
+    validateChain() {
+        for (let i = 1; i < this.chain.length; i++) {
+            const currentBlock = this.chain[i];
+            const previousBlock = this.chain[i - 1];
+
+            // Check if the hash of the current block is correct
+            if (currentBlock.hash !== this.hashBlock(currentBlock.index, currentBlock.previousHash, currentBlock.timestamp, currentBlock.transactions, currentBlock.nonce)) {
+                return false;
+            }
+
+            // Check if the previous hash of the current block matches the hash of the previous block
+            if (currentBlock.previousHash !== previousBlock.hash) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     getChain() {
-        return this.chain;
+        return this.chain.map(block => block.toObject());
+    }
+
+    getPiValue() {
+        return this.piValue;
+    }
+
+    setPiValue(newValue) {
+        this.piValue = newValue;
+    }
+
+    registerUser (username, password) {
+        const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+        this.users[username] = hashedPassword;
+    }
+
+    authenticateUser (username, password) {
+        const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+        return this.users[username] === hashedPassword;
+    }
+
+    signTransaction(privateKey, transaction) {
+        const transactionString = JSON.stringify(transaction);
+        const key = new rsa(privateKey);
+        return key.sign(transactionString, 'base64', 'utf8');
+    }
+
+    verifySignature(publicKey, signature, transaction) {
+        const transactionString = JSON.stringify(transaction);
+        const key = new rsa(publicKey);
+        return key.verify(transactionString, signature, 'utf8', 'base64');
     }
 }
 
-/**
- * Example usage of the Blockchain class
- */
-function main() {
-    const piCoinBlockchain = new Blockchain();
+// Example usage
+const blockchain = new Blockchain();
 
-    // Adding transactions
-    piCoinBlockchain.addTransaction(new Transaction("Alice", "Bob", 10));
-    piCoinBlockchain.addTransaction(new Transaction("Bob", "Charlie", 20));
-    piCoinBlockchain.addTransaction(new Transaction("Charlie", "Alice", 15));
+// Register a user
+blockchain.registerUser ("admin", "password");
 
-    // Mining a block
-    const minedBlock = piCoinBlockchain.mineBlock();
-    console.log("Mined Block:");
-    console.log(JSON.stringify(minedBlock, null, 2));
+// Simulate user authentication
+if (blockchain.authenticateUser ("admin", "password")) {
+    // Create a transaction
+    const sender = "Alice";
+    const recipient = "Bob";
+    const amount = 50.0;
+    const key = new rsa({b: 512}); // Generate RSA keys
+    const privateKey = key.exportKey('private');
+    const publicKey = key.exportKey('public');
+    const transaction = { sender, recipient, amount };
+    const signature = blockchain.signTransaction(privateKey, transaction);
+    
+    // Add the transaction to the blockchain
+    blockchain.addTransaction(sender, recipient, amount, signature);
+    
+    // Mine a new block
+    blockchain.mineBlock();
 
-    // Display the blockchain
-    console.log("Pi Coin Blockchain:");
-    console.log(JSON.stringify(piCoinBlockchain.getChain(), null, 2));
-}
-
-// Run the example
-main();
-
-module.exports = Blockchain;
+    console.log("Blockchain valid:", blockchain.validateChain());
+    console.log("Blockchain:", blockchain.getChain());
+    console.log("Current Pi Coin Value: $", blockchain.getPiValue());
+} else {
+    console.log("Authentication failed.");
+            }
