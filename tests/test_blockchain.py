@@ -1,59 +1,92 @@
 import unittest
-from src.blockchain import Blockchain, Block
+import hashlib
+import json
+import rsa
+from blockchain import Blockchain  # Assuming your blockchain code is in a file named blockchain.py
 
 class TestBlockchain(unittest.TestCase):
 
     def setUp(self):
-        """Set up a new blockchain for testing."""
+        """Set up a new blockchain instance for testing."""
         self.blockchain = Blockchain()
+        self.username = "test_user"
+        self.password = "test_password"
+        self.blockchain.register_user(self.username, self.password)
 
-    def test_genesis_block(self):
-        """Test that the genesis block is created correctly."""
-        genesis_block = self.blockchain.chain[0]
-        self.assertEqual(genesis_block.index, 0)
-        self.assertEqual(genesis_block.previous_hash, "0")
-        self.assertEqual(genesis_block.data, "Genesis Block")
-        self.assertIsNotNone(genesis_block.timestamp)
-        self.assertIsNotNone(genesis_block.hash)
+    def test_user_registration(self):
+        """Test user registration."""
+        self.assertIn(self.username, self.blockchain.users)
+        self.assertEqual(self.blockchain.users[self.username], hashlib.sha256(self.password.encode()).hexdigest())
 
-    def test_add_block(self):
-        """Test adding a new block to the blockchain."""
-        previous_length = len(self.blockchain.chain)
-        new_block = self.blockchain.add_block("Test Block Data")
-        
-        self.assertEqual(len(self.blockchain.chain), previous_length + 1)
-        self.assertEqual(new_block.data, "Test Block Data")
-        self.assertEqual(new_block.index, previous_length)
-        self.assertEqual(new_block.previous_hash, self.blockchain.chain[-2].hash)
+    def test_user_authentication(self):
+        """Test user authentication with correct credentials."""
+        self.assertTrue(self.blockchain.authenticate_user(self.username, self.password))
 
-    def test_block_hash(self):
-        """Test that the hash of a block is correct."""
-        block_data = "Test Block Data"
-        block = Block(1, self.blockchain.chain[0].hash, 1234567890, block_data, "")
-        block.hash = self.blockchain.hash_block(block.index, block.previous_hash, block.timestamp, block.data)
-        
-        self.assertEqual(block.hash, self.blockchain.hash_block(block.index, block.previous_hash, block.timestamp, block.data))
+    def test_user_authentication_failure(self):
+        """Test user authentication with incorrect credentials."""
+        self.assertFalse(self.blockchain.authenticate_user(self.username, "wrong_password"))
+
+    def test_transaction_signing_and_verification(self):
+        """Test transaction signing and verification."""
+        private_key, public_key = rsa.newkeys(512)
+        transaction = {"sender": "Alice", "recipient": "Bob", "amount": 50.0}
+        signature = self.blockchain.sign_transaction(private_key, transaction)
+
+        self.assertTrue(self.blockchain.verify_signature(public_key, signature, transaction))
+
+    def test_invalid_signature(self):
+        """Test verification of an invalid signature."""
+        private_key, public_key = rsa.newkeys(512)
+        transaction = {"sender": "Alice", "recipient": "Bob", "amount": 50.0}
+        signature = self.blockchain.sign_transaction(private_key, transaction)
+
+        # Modify the transaction to create an invalid signature
+        transaction["amount"] = 100.0
+        self.assertFalse(self.blockchain.verify_signature(public_key, signature, transaction))
+
+    def test_add_transaction(self):
+        """Test adding a valid transaction."""
+        private_key, public_key = rsa.newkeys(512)
+        transaction = {"sender": "Alice", "recipient": "Bob", "amount": 50.0}
+        signature = self.blockchain.sign_transaction(private_key, transaction)
+
+        self.blockchain.add_transaction(transaction["sender"], transaction["recipient"], transaction["amount"], signature)
+        self.assertEqual(len(self.blockchain.current_transactions), 1)
+
+    def test_mine_block(self):
+        """Test mining a new block."""
+        private_key, public_key = rsa.newkeys(512)
+        transaction = {"sender": "Alice", "recipient": "Bob", "amount": 50.0}
+        signature = self.blockchain.sign_transaction(private_key, transaction)
+
+        self.blockchain.add_transaction(transaction["sender"], transaction["recipient"], transaction["amount"], signature)
+        new_block = self.blockchain.mine_block()
+
+        self.assertEqual(new_block.index, 1)
+        self.assertEqual(len(new_block.transactions), 1)
 
     def test_validate_chain(self):
-        """Test that the blockchain validates correctly."""
-        self.assertTrue(self.blockchain.validate_chain())
-        self.blockchain.add_block("Test Block Data")
+        """Test chain validation."""
         self.assertTrue(self.blockchain.validate_chain())
 
         # Tamper with the blockchain
-        self.blockchain.chain[1].data = "Tampered Data"
+        self.blockchain.chain[1].transactions[0]["amount"] = 100.0
         self.assertFalse(self.blockchain.validate_chain())
 
     def test_get_chain(self):
-        """Test that the get_chain method returns the correct data."""
-        self.blockchain.add_block("First Block")
-        self.blockchain.add_block("Second Block")
-        
-        chain_data = self.blockchain.get_chain()
-        self.assertEqual(len(chain_data), 3)  # 2 added blocks + genesis block
-        self.assertEqual(chain_data[0]['data'], "Genesis Block")
-        self.assertEqual(chain_data[1]['data'], "First Block")
-        self.assertEqual(chain_data[2]['data'], "Second Block")
+        """Test getting the blockchain."""
+        chain = self.blockchain.get_chain()
+        self.assertEqual(len(chain), 1)  # Only the genesis block should be present initially
 
-if __name__ == '__main__':
+        # Mine a block
+        private_key, public_key = rsa.newkeys(512)
+        transaction = {"sender": "Alice", "recipient": "Bob", "amount": 50.0}
+        signature = self.blockchain.sign_transaction(private_key, transaction)
+        self.blockchain.add_transaction(transaction["sender"], transaction["recipient"], transaction["amount"], signature)
+        self.blockchain.mine_block()
+
+        chain = self.blockchain.get_chain()
+        self.assertEqual(len(chain), 2)  # Now there should be the genesis block and one mined block
+
+if __name__ == "__main__":
     unittest.main()
