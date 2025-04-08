@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const rsa = require('node-rsa');
+const WebSocket = require('ws');
 
 class Block {
     constructor(index, previousHash, timestamp, transactions, hash, nonce) {
@@ -30,6 +31,7 @@ class Blockchain {
         this.piValue = 314159.00; // Set the value of Pi Coin
         this.users = {}; // Store user credentials
         this.createGenesisBlock();
+        this.nodes = new Set(); // Store nodes in the network
     }
 
     createGenesisBlock() {
@@ -71,6 +73,7 @@ class Blockchain {
         const newBlock = new Block(index, previousBlock.hash, timestamp, this.currentTransactions, hashValue, nonce);
         this.chain.push(newBlock);
         this.currentTransactions = []; // Reset the current transactions
+        this.broadcastNewBlock(newBlock); // Broadcast the new block to all nodes
         return newBlock;
     }
 
@@ -128,7 +131,7 @@ class Blockchain {
         return this.users[username] === hashedPassword;
     }
 
-    signTransaction(privateKey, transaction) {
+    signTransaction (privateKey, transaction) {
         const transactionString = JSON.stringify(transaction);
         const key = new rsa(privateKey);
         return key.sign(transactionString, 'base64', 'utf8');
@@ -138,6 +141,31 @@ class Blockchain {
         const transactionString = JSON.stringify(transaction);
         const key = new rsa(publicKey);
         return key.verify(transactionString, signature, 'utf8', 'base64');
+    }
+
+    addNode(url) {
+        this.nodes.add(url);
+    }
+
+    broadcastNewBlock(newBlock) {
+        this.nodes.forEach(node => {
+            const ws = new WebSocket(node);
+            ws.on('open', () => {
+                ws.send(JSON.stringify({ type: 'newBlock', block: newBlock }));
+            });
+        });
+    }
+
+    handleReceivedBlock(newBlock) {
+        if (!this.chain.includes(newBlock) && this.validateChain()) {
+            this.chain.push(newBlock);
+        }
+    }
+
+    // Smart contract execution placeholder
+    executeSmartContract(contract) {
+        // Logic to execute smart contracts can be added here
+        console.log("Executing smart contract:", contract);
     }
 }
 
