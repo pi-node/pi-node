@@ -33,6 +33,7 @@ class Blockchain:
         self.pi_value = 314159.00  # Set the value of Pi Coin
         self.create_genesis_block()
         self.users = {}  # Store user credentials
+        self.nodes = set()  # Store nodes in the network
 
     def create_genesis_block(self):
         """Create the first block in the blockchain."""
@@ -73,6 +74,7 @@ class Blockchain:
         new_block = Block(index, previous_block.hash, timestamp, self.current_transactions, hash_value, nonce)
         self.chain.append(new_block)
         self.current_transactions = []  # Reset the current transactions
+        self.broadcast_new_block(new_block)  # Broadcast the new block to all nodes
         return new_block
 
     def proof_of_work(self, last_nonce: int) -> int:
@@ -104,7 +106,7 @@ class Blockchain:
 
         return True
 
-    def get_chain(self) -> List[Dict [str, Any]]:
+    def get_chain(self) -> List[Dict[str, Any]]:
         """Get the blockchain as a list of dictionaries."""
         return [block.to_dict() for block in self.chain]
 
@@ -139,6 +141,27 @@ class Blockchain:
             return True
         except rsa.VerificationError:
             return False
+
+    def add_node(self, node_url: str) -> None:
+        """Add a new node to the network."""
+        self.nodes.add(node_url)
+
+    def broadcast_new_block(self, new_block: Block) -> None:
+        """Broadcast the new block to all nodes in the network."""
+        for node in self.nodes:
+            # Simulate sending the new block to the node
+            print(f"Broadcasting new block to {node}")
+
+    def handle_received_block(self, new_block: Block) -> None:
+        """Handle a new block received from another node."""
+        if new_block not in self.chain and self.validate_chain():
+            self.chain.append(new_block)
+
+    # Smart contract execution placeholder
+    def execute_smart_contract(self, contract: Dict[str, Any]) -> None:
+        """Execute a smart contract."""
+        # Logic to execute smart contracts can be added here
+        print("Executing smart contract:", contract)
 
 # Example usage
 if __name__ == "__main__":
