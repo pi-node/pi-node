@@ -101,4 +101,4 @@ describe('Blockchain', function() {
 // Run the tests
 if (require.main === module) {
     require('mocha').run();
-}
+            }
