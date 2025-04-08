@@ -1,6 +1,5 @@
 import unittest
 import hashlib
-import json
 import rsa
 from blockchain import Blockchain  # Assuming your blockchain code is in a file named blockchain.py
 
@@ -9,26 +8,25 @@ class TestBlockchain(unittest.TestCase):
     def setUp(self):
         """Set up a new blockchain instance for testing."""
         self.blockchain = Blockchain()
-        self.username = "test_user"
-        self.password = "test_password"
-        self.blockchain.register_user(self.username, self.password)
+        self.blockchain.register_user("test_user", "test_password")
 
     def test_user_registration(self):
         """Test user registration."""
-        self.assertIn(self.username, self.blockchain.users)
-        self.assertEqual(self.blockchain.users[self.username], hashlib.sha256(self.password.encode()).hexdigest())
+        self.assertIn("test_user", self.blockchain.users)
+        hashed_password = hashlib.sha256("test_password".encode()).hexdigest()
+        self.assertEqual(self.blockchain.users["test_user"], hashed_password)
 
     def test_user_authentication(self):
         """Test user authentication with correct credentials."""
-        self.assertTrue(self.blockchain.authenticate_user(self.username, self.password))
+        self.assertTrue(self.blockchain.authenticate_user("test_user", "test_password"))
 
     def test_user_authentication_failure(self):
         """Test user authentication with incorrect credentials."""
-        self.assertFalse(self.blockchain.authenticate_user(self.username, "wrong_password"))
+        self.assertFalse(self.blockchain.authenticate_user("test_user", "wrong_password"))
 
     def test_transaction_signing_and_verification(self):
         """Test transaction signing and verification."""
-        private_key, public_key = rsa.newkeys(512)
+        private_key, public_key = rsa.newkeys(512)  # Generate RSA keys
         transaction = {"sender": "Alice", "recipient": "Bob", "amount": 50.0}
         signature = self.blockchain.sign_transaction(private_key, transaction)
 
@@ -36,7 +34,7 @@ class TestBlockchain(unittest.TestCase):
 
     def test_invalid_signature(self):
         """Test verification of an invalid signature."""
-        private_key, public_key = rsa.newkeys(512)
+        private_key, public_key = rsa.newkeys(512)  # Generate RSA keys
         transaction = {"sender": "Alice", "recipient": "Bob", "amount": 50.0}
         signature = self.blockchain.sign_transaction(private_key, transaction)
 
@@ -46,7 +44,7 @@ class TestBlockchain(unittest.TestCase):
 
     def test_add_transaction(self):
         """Test adding a valid transaction."""
-        private_key, public_key = rsa.newkeys(512)
+        private_key, public_key = rsa.newkeys(512)  # Generate RSA keys
         transaction = {"sender": "Alice", "recipient": "Bob", "amount": 50.0}
         signature = self.blockchain.sign_transaction(private_key, transaction)
 
@@ -55,7 +53,7 @@ class TestBlockchain(unittest.TestCase):
 
     def test_mine_block(self):
         """Test mining a new block."""
-        private_key, public_key = rsa.newkeys(512)
+        private_key, public_key = rsa.newkeys(512)  # Generate RSA keys
         transaction = {"sender": "Alice", "recipient": "Bob", "amount": 50.0}
         signature = self.blockchain.sign_transaction(private_key, transaction)
 
@@ -79,7 +77,7 @@ class TestBlockchain(unittest.TestCase):
         self.assertEqual(len(chain), 1)  # Only the genesis block should be present initially
 
         # Mine a block
-        private_key, public_key = rsa.newkeys(512)
+        private_key, public_key = rsa.newkeys(512)  # Generate RSA keys
         transaction = {"sender": "Alice", "recipient": "Bob", "amount": 50.0}
         signature = self.blockchain.sign_transaction(private_key, transaction)
         self.blockchain.add_transaction(transaction["sender"], transaction["recipient"], transaction["amount"], signature)
