@@ -1,0 +1,17 @@
+# roles/pi-supernode/templates/config.j2
+{
+  "api": {
+    "host": "{{ api_host | default('0.0.0.0') }}",
+    "port": {{ api_port | default(8080) }}
+  },
+  "database": {
+    "host": "{{ db_host | default('localhost') }}",
+    "port": {{ db_port | default(5432) }},
+    "username": "{{ db_username | default('pi_supernode') }}",
+    "password": "{{ db_password | default('password') }}"
+  },
+  "node": {
+    "name": "{{ node_name | default('pi-supernode') }}",
+    "description": "{{ node_description | default('Pi Supernode') }}"
+  }
+}

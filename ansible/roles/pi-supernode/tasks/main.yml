@@ -1,0 +1,34 @@
+# roles/pi-supernode/tasks/main.yml
+---
+- name: Install and configure Pi Supernode
+  become: yes
+
+  tasks:
+  - name: Install dependencies
+    apt:
+      name: python3-pip,libffi-dev,libssl-dev
+      state: present
+
+  - name: Install Pi Supernode
+    pip:
+      name: pi-supernode
+      state: present
+
+  - name: Configure Pi Supernode
+    template:
+      src: templates/config.j2
+      dest: /etc/pi-supernode/config.json
+      mode: '0644'
+    notify: restart pi-supernode
+
+  - name: Start and enable Pi Supernode service
+    service:
+      name: pi-supernode
+      state: started
+      enabled: yes
+
+  handlers:
+  - name: restart pi-supernode
+    service:
+      name: pi-supernode
+      state: restarted
