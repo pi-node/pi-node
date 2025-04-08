@@ -24,6 +24,7 @@ class Block:
 class Blockchain:
     def __init__(self):
         self.chain: List[Block] = []
+        self.pi_value = 314159.00  # Set the value of Pi Coin
         self.create_genesis_block()
 
     def create_genesis_block(self):
@@ -71,11 +72,20 @@ class Blockchain:
         """Get the blockchain as a list of dictionaries."""
         return [block.to_dict() for block in self.chain]
 
+    def get_pi_value(self) -> float:
+        """Get the current value of Pi Coin."""
+        return self.pi_value
+
+    def set_pi_value(self, new_value: float) -> None:
+        """Set a new value for Pi Coin."""
+        self.pi_value = new_value
+
 # Example usage
 if __name__ == "__main__":
     blockchain = Blockchain()
-    blockchain.add_block("First block data")
-    blockchain.add_block("Second block data")
+    blockchain.add_block({"transaction": "First block data", "value": blockchain.get_pi_value()})
+    blockchain.add_block({"transaction": "Second block data", "value": blockchain.get_pi_value()})
 
     print("Blockchain valid:", blockchain.validate_chain())
     print("Blockchain:", blockchain.get_chain())
+    print("Current Pi Coin Value: $", blockchain.get_pi_value())
