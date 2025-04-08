@@ -1,9 +1,10 @@
 import hashlib
 import time
 import json
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 import random
 import string
+import rsa  # For digital signatures
 
 class Block:
     def __init__(self, index: int, previous_hash: str, timestamp: float, transactions: List[Dict[str, Any]], hash: str, nonce: int):
@@ -31,6 +32,7 @@ class Blockchain:
         self.current_transactions: List[Dict[str, Any]] = []
         self.pi_value = 314159.00  # Set the value of Pi Coin
         self.create_genesis_block()
+        self.users = {}  # Store user credentials
 
     def create_genesis_block(self):
         """Create the first block in the blockchain."""
@@ -48,14 +50,17 @@ class Blockchain:
         }, sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
 
-    def add_transaction(self, sender: str, recipient: str, amount: float) -> None:
+    def add_transaction(self, sender: str, recipient: str, amount: float, signature: str) -> None:
         """Add a new transaction to the list of transactions."""
-        self.current_transactions.append({
-            "sender": sender,
-            "recipient": recipient,
-            "amount": amount,
-            "timestamp": time.time()
-        })
+        if self.verify_signature(sender, signature):
+            self.current_transactions.append({
+                "sender": sender,
+                "recipient": recipient,
+                "amount": amount,
+                "timestamp": time.time()
+            })
+        else:
+            raise ValueError("Invalid transaction signature.")
 
     def mine_block(self) -> Block:
         """Mine a new block and add it to the blockchain."""
@@ -99,11 +104,11 @@ class Blockchain:
 
         return True
 
-    def get_chain(self) -> List[Dict[str, Any]]:
+    def get_chain(self) -> List[Dict [str, Any]]:
         """Get the blockchain as a list of dictionaries."""
         return [block.to_dict() for block in self.chain]
 
-    def get_pi_value (self) -> float:
+    def get_pi_value(self) -> float:
         """Get the current value of Pi Coin."""
         return self.pi_value
 
@@ -111,19 +116,49 @@ class Blockchain:
         """Set a new value for Pi Coin."""
         self.pi_value = new_value
 
+    def register_user(self, username: str, password: str) -> None:
+        """Register a new user with a hashed password."""
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+        self.users[username] = hashed_password
+
     def authenticate_user(self, username: str, password: str) -> bool:
-        """Simple user authentication (placeholder)."""
-        # In a real application, this would check against a database
-        return username == "admin" and password == "password"
+        """Authenticate a user using hashed password."""
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+        return self.users.get(username) == hashed_password
+
+    def sign_transaction(self, private_key, transaction: Dict[str, Any]) -> str:
+        """Sign a transaction using the user's private key."""
+        transaction_string = json.dumps(transaction, sort_keys=True).encode()
+        return rsa.sign(transaction_string, private_key, 'SHA-256')
+
+    def verify_signature(self, public_key, signature: str, transaction: Dict[str, Any]) -> bool:
+        """Verify the transaction signature."""
+        transaction_string = json.dumps(transaction, sort_keys=True).encode()
+        try:
+            rsa.verify(transaction_string, signature, public_key)
+            return True
+        except rsa.VerificationError:
+            return False
 
 # Example usage
 if __name__ == "__main__":
     blockchain = Blockchain()
     
+    # Register a user
+    blockchain.register_user("admin", "password")
+    
     # Simulate user authentication
     if blockchain.authenticate_user("admin", "password"):
-        blockchain.add_transaction("Alice", "Bob", 50.0)
-        blockchain.add_transaction("Bob", "Charlie", 25.0)
+        # Create a transaction
+        sender = "Alice"
+        recipient = "Bob"
+        amount = 50.0
+        private_key, public_key = rsa.newkeys(512)  # Generate RSA keys
+        transaction = {"sender": sender, "recipient": recipient, "amount": amount}
+        signature = blockchain.sign_transaction(private_key, transaction)
+        
+        # Add the transaction to the blockchain
+        blockchain.add_transaction(sender, recipient, amount, signature)
         
         # Mine a new block
         blockchain.mine_block()
