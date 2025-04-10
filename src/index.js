@@ -12,6 +12,9 @@ const OracleIntegration = require('./oracleIntegration'); // Import OracleIntegr
 const BroadcastSync = require('./broadcastSync'); // Import BroadcastSync
 const PartnerAPI = require('./partnerApi'); // Import PartnerAPI
 const ComplianceMonitor = require('./complianceMonitor'); // Import ComplianceMonitor
+const QuantumSecurity = require('./quantumSecurity'); // Import QuantumSecurity
+const ThreatDetection = require('./threatDetection'); // Import ThreatDetection
+const MultiSigWallet = require('./multiSigWallet'); // Import MultiSigWallet
 
 // Load environment variables from .env file
 dotenv.config();
@@ -56,6 +59,11 @@ const complianceMonitor = new ComplianceMonitor(0.05, () => {
     console.log('Penalty applied for non-compliance!');
 });
 
+// Initialize Quantum Security, Threat Detection, and Multi-Sig Wallet
+const quantumSecurity = new QuantumSecurity();
+const threatDetection = new ThreatDetection();
+const multiSigWallet = new MultiSigWallet(['0xSigner1', '0xSigner2'], 2); // Example signers and required signatures
+
 // Middleware to attach Stellar server and Pi Coin asset to the request
 app.use((req, res, next) => {
     req.stellarServer = server;
@@ -64,6 +72,9 @@ app.use((req, res, next) => {
     req.oracleIntegration = oracleIntegration;
     req.broadcastSync = broadcastSync; // Attach broadcast sync
     req.complianceMonitor = complianceMonitor; // Attach compliance monitor
+    req.quantumSecurity = quantumSecurity; // Attach quantum security
+    req.threatDetection = threatDetection; // Attach threat detection
+    req.multiSigWallet = multiSigWallet; // Attach multi-sig wallet
     next();
 });
 
@@ -79,6 +90,9 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'UP' });
 });
 
+// Define the total supply of Pi Coin
+const TOTAL_SUPPLY = 100000000000; // Set total supply to 100 billion
+
 // Function to monitor price and adjust supply
 async function monitorPriceAndAdjustSupply() {
     try {
@@ -88,7 +102,7 @@ async function monitorPriceAndAdjustSupply() {
 
         // Implement your dynamic pegging logic here
         const targetPrice = 314159.00; // Example target price
-        const priceDeviation = ((currentPrice - targetPrice) / targetPrice);
+        const priceDeviation = ((currentPrice - targetPrice)/ targetPrice);
 
         // Determine the amount to mint or burn based on price deviation
         const adjustmentAmount = calculateAdjustmentAmount(priceDeviation);
@@ -104,7 +118,7 @@ async function monitorPriceAndAdjustSupply() {
         }
 
         // Broadcast the updated value and total supply
-        broadcastSync.updateValue(currentPrice, process.env.TOTAL_SUP PLY); // Assuming TOTAL_SUPPLY is defined in your environment variables
+        broadcastSync.updateValue(currentPrice, TOTAL_SUPPLY); // Use the defined TOTAL_SUPPLY
 
         // Update compliance monitor with the current price
         complianceMonitor.updateValue(currentPrice);
