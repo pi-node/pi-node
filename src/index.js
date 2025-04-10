@@ -9,6 +9,9 @@ const rateLimit = require('express-rate-limit'); // Rate limiting middleware
 const cors = require('cors'); // CORS middleware
 const SupplyManager = require('./supplyManager'); // Import SupplyManager
 const OracleIntegration = require('./oracleIntegration'); // Import OracleIntegration
+const BroadcastSync = require('./broadcastSync'); // Import BroadcastSync
+const PartnerAPI = require('./partnerApi'); // Import PartnerAPI
+const ComplianceMonitor = require('./complianceMonitor'); // Import ComplianceMonitor
 
 // Load environment variables from .env file
 dotenv.config();
@@ -44,12 +47,23 @@ const piCoinAsset = new StellarSdk.Asset(
 const supplyManager = new SupplyManager(process.env.TOKEN_CONTRACT_ADDRESS);
 const oracleIntegration = new OracleIntegration(process.env.PRICE_FEED_ADDRESS);
 
+// Initialize BroadcastSync and PartnerAPI
+const broadcastSync = new BroadcastSync(8080); // WebSocket server for broadcasting
+const partnerAPI = new PartnerAPI(3000, broadcastSync); // API for partners
+
+// Initialize ComplianceMonitor
+const complianceMonitor = new ComplianceMonitor(0.05, () => {
+    console.log('Penalty applied for non-compliance!');
+});
+
 // Middleware to attach Stellar server and Pi Coin asset to the request
 app.use((req, res, next) => {
     req.stellarServer = server;
     req.piCoinAsset = piCoinAsset;
     req.supplyManager = supplyManager;
     req.oracleIntegration = oracleIntegration;
+    req.broadcastSync = broadcastSync; // Attach broadcast sync
+    req.complianceMonitor = complianceMonitor; // Attach compliance monitor
     next();
 });
 
@@ -88,6 +102,12 @@ async function monitorPriceAndAdjustSupply() {
         } else {
             console.log("No significant price deviation detected. No action taken.");
         }
+
+        // Broadcast the updated value and total supply
+        broadcastSync.updateValue(currentPrice, process.env.TOTAL_SUP PLY); // Assuming TOTAL_SUPPLY is defined in your environment variables
+
+        // Update compliance monitor with the current price
+        complianceMonitor.updateValue(currentPrice);
     } catch (error) {
         console.error("Error in monitoring price and adjusting supply:", error);
     }
