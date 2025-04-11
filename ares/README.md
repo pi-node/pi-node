@@ -202,7 +202,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 Developer: KOSASIH  
 GitHub: KOSASIH/pi-supernode  
-Issues: Report bugs or suggestions in GitHub Issues  
+Issues: Report bugs or suggestions in [GitHub Issues](https://github.com/KOSASIH/pi-supernode/issues) 
 
 ## Notes
 
