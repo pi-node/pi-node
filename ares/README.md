@@ -59,10 +59,9 @@ ARES aims to:
    npm install
    ```
 
-   ARES requires additional libraries: 
+   ARES requires additional libraries: package.json
 
-   ```json
-   // package.json
+   ```json  
    {
      "dependencies": {
        "express": "^4.18.2",
