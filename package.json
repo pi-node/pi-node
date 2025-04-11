@@ -1,14 +1,16 @@
 {
   "name": "pi-supernode",
-  "version": "0.5.1",
-  "description": "A supernode implementation for Pi Coin utilizing advanced quantum and AI technologies to prevent manipulation across exchanges.",
+  "version": "1.0.0",
+  "description": "A supernode for the Pi network using ARES architecture.",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "jest",
+    "test": "jest", // Updated to use Jest for testing
     "setup": "bash scripts/setup.sh",
     "monitor": "bash scripts/monitor.sh",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build": "echo \"No build specified\" && exit 0", // Placeholder for build script
+    "dev": "nodemon src/index.js" // Added a script for development with nodemon
   },
   "keywords": [
     "blockchain",
@@ -20,15 +22,21 @@
   "author": "KOSASIH",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.17.1",
+    "node-fetch": "^2.6.7",
+    "tensorflow": "^0.12.0",
+    "express": "^4.18.2",
+    "dotenv": "^10.0.0", // For environment variable management
+    "winston": "^3.3.3", // A popular logging library
     "body-parser": "^1.19.0",
     "stellar-sdk": "^9.0.0",
-    "dotenv": "^10.0.0",
     "express-validator": "^6.14.0",
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.22" // Updated to the latest version
   },
   "devDependencies": {
-    "jest": "^27.0.0",
-    "eslint": "^7.0.0"
+    "jest": "^27.0.6", // Updated to the latest version
+    "eslint": "^8.0.0" // For linting your code
+  },
+  "engines": {
+    "node": ">=14.0.0" // Specify the Node.js version
   }
 }
