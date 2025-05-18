@@ -1,7 +1,7 @@
 {
   "ledger": {
     "number": 0,
-    "timestamp": "2025-05-18T20:27:00Z",
+    "timestamp": "2025-05-18T21:07:00Z",
     "version": "2.0.0",
     "networkId": "pi-mainnet-ultra",
     "chain": "PiQuantumLedger"
@@ -9,47 +9,23 @@
   "initialAccounts": {
     "GPIFOUNDATIONRESERVE": {
       "balance": "1000000000000000000",
-      "lockedUntil": "2030-05-18T20:27:00Z",
+      "lockedUntil": "2030-05-18T21:07:00Z",
       "signers": [
-        {
-          "publicKey": "GPIFOUNDATIONMULTISIG1",
-          "weight": 1
-        },
-        {
-          "publicKey": "GPIFOUNDATIONMULTISIG2",
-          "weight": 1
-        }
+        { "publicKey": "GPIFOUNDATIONMULTISIG1", "weight": 1 },
+        { "publicKey": "GPIFOUNDATIONMULTISIG2", "weight": 1 }
       ],
-      "thresholds": {
-        "low": 1,
-        "medium": 2,
-        "high": 2
-      },
-      "flags": {
-        "authRequired": true,
-        "authRevocable": true
-      }
+      "thresholds": { "low": 1, "medium": 2, "high": 2 },
+      "flags": { "authRequired": true, "authRevocable": true }
     },
     "GPIECOSYSTEMFUND": {
       "balance": "500000000000000000",
-      "signers": [
-        {
-          "publicKey": "GPIECOSYSTEMSIGNER",
-          "weight": 1
-        }
-      ],
-      "thresholds": {
-        "low": 1,
-        "medium": 1,
-        "high": 1
-      }
+      "signers": [{ "publicKey": "GPIECOSYSTEMSIGNER", "weight": 1 }],
+      "thresholds": { "low": 1, "medium": 1, "high": 1 }
     },
     "GPICOMMUNITYPOOL": {
       "balance": "250000000000000000",
-      "lockedUntil": "2026-05-18T20:27:00Z",
-      "flags": {
-        "authImmutable": true
-      }
+      "lockedUntil": "2026-05-18T21:07:00Z",
+      "flags": { "authImmutable": true }
     }
   },
   "initialAssets": {
@@ -57,15 +33,10 @@
       "type": "native",
       "totalSupply": "1000000000000000000",
       "issuer": "GPIFOUNDATIONRESERVE",
+      "displaySymbol": "Pi",
       "trustlines": [
-        {
-          "account": "GPIECOSYSTEMFUND",
-          "limit": "500000000000000000"
-        },
-        {
-          "account": "GPICOMMUNITYPOOL",
-          "limit": "250000000000000000"
-        }
+        { "account": "GPIECOSYSTEMFUND", "limit": "500000000000000000" },
+        { "account": "GPICOMMUNITYPOOL", "limit": "250000000000000000" }
       ]
     },
     "PIGOVERNANCE": {
@@ -73,22 +44,18 @@
       "code": "PIGOV",
       "issuer": "GPIFOUNDATIONRESERVE",
       "totalSupply": "1000000000000000",
+      "displaySymbol": "PIGOV",
       "trustlines": [
-        {
-          "account": "GPICOMMUNITYPOOL",
-          "limit": "500000000000000"
-        }
+        { "account": "GPICOMMUNITYPOOL", "limit": "500000000000000" }
       ],
-      "flags": {
-        "authRequired": true,
-        "authRevocable": true
-      }
+      "flags": { "authRequired": true, "authRevocable": true }
     },
     "PIUSD": {
       "type": "credit",
       "code": "PIUSD",
       "issuer": "GPIFOUNDATIONRESERVE",
       "totalSupply": "1000000000000000",
+      "displaySymbol": "PIUSD",
       "peggedTo": "USD",
       "trustlines": []
     }
@@ -126,8 +93,7 @@
       "shards": 16,
       "initialShardKeys": [
         "shard0",
-        "shard1",
-        // ... up to shard15
+        "shard1"
       ]
     },
     "quantumResistance": {
@@ -160,4 +126,4 @@
     "votingPeriod": "7d",
     "initialProposals": []
   }
-}
+    }
