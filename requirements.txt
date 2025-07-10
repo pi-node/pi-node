@@ -1,0 +1,28 @@
+# Core dependencies for web application and API
+Flask==2.2.2                # A lightweight WSGI web application framework
+Flask-RESTful==0.3.9        # An extension for Flask that adds support for quickly building REST APIs
+requests==2.28.1            # A simple HTTP library for making requests to other services
+
+# Testing dependencies
+pytest==7.1.2               # A framework that makes building simple and scalable test cases easy
+pytest-cov==3.0.0           # A plugin for measuring code coverage in pytest
+
+# Database interaction (if applicable)
+SQLAlchemy==1.4.39          # SQL toolkit and Object-Relational Mapping (ORM) system for Python
+
+# Data manipulation and analysis (optional)
+pandas==1.4.2               # A powerful data analysis and manipulation library
+numpy==1.22.3               # A library for numerical operations
+
+# Blockchain specific libraries
+pycryptodome==3.15.0        # A self-contained Python package of low-level cryptographic primitives
+web3==5.29.0                # A library for interacting with Ethereum blockchain
+
+# Optional: For smart contracts development
+eth-brownie==1.19.0         # A Python-based development and testing framework for Ethereum smart contracts
+
+# Optional: For logging
+loguru==0.6.0               # A library that simplifies logging in Python applications
+
+# Optional: For configuration management
+python-dotenv==0.20.0       # A library to load environment variables from a .env file

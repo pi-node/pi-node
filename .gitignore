@@ -1,0 +1,39 @@
+# Node.js dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Environment variables
+.env
+
+# Build output
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Test output
+test-results/
+*.spec.js
+*.test.js
+
+# Ignore any other files or directories that should not be tracked
+*.bak
+*.swp

@@ -1,0 +1,11 @@
+FROM rabbitmq:3.9-management-alpine
+
+# Set environment variables
+ENV RABBITMQ_DEFAULT_USER=user
+ENV RABBITMQ_DEFAULT_PASS=password
+
+# Expose the management port
+EXPOSE 15672
+
+# Set the default command
+CMD ["rabbitmq-server"]

@@ -1,0 +1,19 @@
+{
+    "TRANSACTION_FEE": 0.005,  // Custom transaction fee (in Pi Coin)
+    "ENABLE_FEATURE_X": true,  // Enable or disable Feature X
+    "ENABLE_FEATURE_Y": false,  // Enable or disable Feature Y
+    "MAX_CONNECTIONS": 100,  // Maximum number of simultaneous connections
+    "API_RATE_LIMIT": 100,  // Maximum number of API calls per minute
+    "MAINTENANCE_MODE": false,  // Set to true to enable maintenance mode
+    "ALLOWED_IPS": [  // List of allowed IP addresses for API access
+        "192.168.1.1",
+        "192.168.1.2"
+    ],
+    "BLOCKCHAIN_SYNC_INTERVAL": 60,  // Interval in seconds for syncing with the blockchain
+    "ENABLE_AUTO_BACKUP": true,  // Enable automatic backups of the database
+    "BACKUP_INTERVAL": 3600,  // Backup interval in seconds
+    "NOTIFICATION_EMAIL": "admin@example.com",  // Email for notifications
+    "ENABLE_SSL": true,  // Enable SSL for secure connections
+    "SSL_CERT_PATH": "/path/to/your/cert.pem",  // Path to SSL certificate
+    "SSL_KEY_PATH": "/path/to/your/key.pem"  // Path to SSL key
+}

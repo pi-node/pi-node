@@ -1,0 +1,10 @@
+FROM haproxy:2.2.0
+
+# Copy the HAProxy configuration file
+COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+
+# Expose the HAProxy ports
+EXPOSE 80
+
+# Set the default command
+CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
