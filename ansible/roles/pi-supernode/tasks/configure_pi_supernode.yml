@@ -1,0 +1,28 @@
+# roles/pi-supernode/tasks/configure_pi_supernode.yml
+---
+- name: Configure Pi Supernode
+  become: yes
+
+  tasks:
+  - name: Generate Pi Supernode configuration
+    template:
+      src: templates/config.j2
+      dest: /etc/pi-supernode/config.json
+      mode: '0644'
+
+  - name: Configure Pi Supernode API
+    template:
+      src: templates/api.j2
+      dest: /etc/pi-supernode/api.json
+      mode: '0644'
+
+  - name: Configure Pi Supernode database
+    template:
+      src: templates/database.j2
+      dest: /etc/pi-supernode/database.json
+      mode: '0644'
+
+  - name: Restart Pi Supernode service
+    service:
+      name: pi-supernode
+      state: restarted

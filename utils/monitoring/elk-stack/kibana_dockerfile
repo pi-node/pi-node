@@ -1,0 +1,4 @@
+FROM kibana:7.16.1
+
+# Set the default command
+CMD ["-E", "server.host=0.0.0.0"]

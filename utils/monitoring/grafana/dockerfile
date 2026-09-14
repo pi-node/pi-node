@@ -1,0 +1,4 @@
+FROM grafana/grafana:8.3.0
+
+# Set the default command
+CMD ["-config", "=/etc/grafana/grafana.ini"]

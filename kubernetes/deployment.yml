@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pi-node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pi-node
+  template:
+    metadata:
+      labels:
+        app: pi-node
+    spec:
+      containers:
+      - name: pi-node
+        image: pi-node:latest
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/pi-node
+      volumes:
+      - name: config-volume
+        configMap:
+          name: pi-node-config

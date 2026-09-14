@@ -1,0 +1,19 @@
+# Data storage service configuration
+
+# Database configuration
+database:
+  host: localhost
+  port: 5432
+  name: data_storage
+  user: data_storage
+  password: password
+
+# Logging configuration
+logging:
+  level: info
+  file: /var/log/data-storage.log
+
+# Server configuration
+server:
+  host: localhost
+  port: 3002

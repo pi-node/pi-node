@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pi-node-config
+data:
+  config.json: |
+    {
+      "node_id": "node-1",
+      "node_name": "Pi Node 1",
+      "sleep_mode": true,
+      "wake_on_lan": true
+    }

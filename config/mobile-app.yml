@@ -1,0 +1,15 @@
+# Mobile app service configuration
+
+# Logging configuration
+logging:
+  level: info
+  file: /var/log/mobile-app.log
+
+# Server configuration
+server:
+  host: localhost
+  port: 3006
+
+# API configuration
+api:
+  version: 1.0.0

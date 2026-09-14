@@ -1,0 +1,19 @@
+FROM node:16
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the package.json and package-lock.json files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the application code
+COPY . .
+
+# Install orchestration tools
+RUN npm install -g kubernetes-cli helm
+
+# Run the orchestration tools
+CMD ["kubectl", "get", "pods"]

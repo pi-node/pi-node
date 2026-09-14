@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  pi-node:
+    build:.
+    ports:
+      - "8080:8080"
+    environment:
+      - PI_NODE_CONFIG=/etc/pi-node/config.json
+    volumes:
+      -./config.json:/etc/pi-node/config.json

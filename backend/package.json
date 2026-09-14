@@ -1,0 +1,51 @@
+{
+  "name": "pi-supernode-backend",
+  "version": "1.0.0",
+  "description": "Backend for the Pi Supernode project, integrating with public APIs.",
+  "main": "src/main/index.js",
+  "scripts": {
+    "start": "node src/main/index.js",
+    "dev": "nodemon src/main/index.js",
+    "test": "jest",
+    "lint": "eslint .",
+    "build": "echo 'No build step required for backend'",
+    "prettify": "prettier --write '**/*.js'"
+  },
+  "keywords": [
+    "decentralized",
+    "supernode",
+    "backend",
+    "api",
+    "nodejs",
+    "express"
+  ],
+  "author": "KOSASIH",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "joi": "^17.4.0",
+    "node-cache": "^5.1.2",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.0.0",
+    "jest": "^27.0.0",
+    "nodemon": "^2.0.7",
+    "prettier": "^2.3.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KOSASIH/pi-supernode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KOSASIH/pi-supernode/issues"
+  },
+  "homepage": "https://github.com/KOSASIH/pi-supernode#readme"
+}

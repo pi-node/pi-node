@@ -1,0 +1,46 @@
+{
+  "name": "pi-coin",
+  "version": "1.0.0",
+  "description": "A super advanced cryptocurrency application with blockchain, user management, and smart contracts.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jest",
+    "lint": "eslint .",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "cryptocurrency",
+    "blockchain",
+    "smart-contracts",
+    "user-management"
+  ],
+  "author": "KOSASIH",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.0.1", // For password hashing
+    "crypto": "^1.0.1", // For cryptographic functions
+    "dotenv": "^10.0.0", // For environment variable management
+    "express": "^4.17.1", // For creating a web server (if needed)
+    "mongoose": "^5.10.9", // For MongoDB object modeling (if using MongoDB)
+    "nodemon": "^2.0.7", // For automatically restarting the server during development
+    "jest": "^26.6.0", // For testing
+    "eslint": "^7.14.0" // For linting
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7", // For development convenience
+    "jest": "^26.6.0", // For testing
+    "eslint": "^7.14.0" // For code quality
+  },
+  "engines": {
+    "node": ">=14.0.0" // Specify the minimum Node.js version
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KOSASIH/pi-supernode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KOSASIH/pi-supernode/issues"
+  },
+  "homepage": "https://github.com/KOSASIH/pi-supernode#readme"
+}
